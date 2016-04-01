@@ -1,0 +1,6 @@
+[submodule "Toolkits/HoloToolkit"]
+	path = Toolkits/HoloToolkit
+	url = https://github.com/Microsoft/HoloToolkit.git
+[submodule "Toolkits/HoloToolkit-Unity"]
+	path = Toolkits/HoloToolkit-Unity
+	url = https://github.com/Microsoft/HoloToolkit-Unity.git
