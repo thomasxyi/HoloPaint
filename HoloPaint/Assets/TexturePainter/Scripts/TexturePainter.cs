@@ -96,7 +96,7 @@ public class TexturePainter : MonoBehaviour {
 
     //The main action, instantiates a brush or decal entity at the clicked position on the UV map
     void DoAction(){	
-		if (saving)
+		if (saving || (AppStateManager.Instance.CurrentAppState != AppStateManager.AppState.Ready))
 			return;
 		Vector3 uvWorldPosition=Vector3.zero;		
 		if(HitTestUVPosition(ref uvWorldPosition)){
@@ -125,7 +125,7 @@ public class TexturePainter : MonoBehaviour {
 	//To update at realtime the painting cursor on the mesh
 	void UpdateBrushCursor(){
 		Vector3 uvWorldPosition=Vector3.zero;
-		if (HitTestUVPosition (ref uvWorldPosition) && !saving) {
+		if (HitTestUVPosition (ref uvWorldPosition) && !saving && (AppStateManager.Instance.CurrentAppState == AppStateManager.AppState.Ready)) {
 			brushCursor.SetActive(true);
 			brushCursor.transform.position =uvWorldPosition+brushContainer.transform.position;									
 		} else {
