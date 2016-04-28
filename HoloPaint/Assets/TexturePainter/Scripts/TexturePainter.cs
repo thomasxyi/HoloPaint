@@ -21,7 +21,7 @@ public class TexturePainter : MonoBehaviour {
 
 	Painter_BrushMode mode; //Our painter mode (Paint brushes or decals)
 	float brushSize=1.0f; //The size of our brush
-	Color brushColor; //The selected color
+	Color brushColor = Color.red; //The selected color
 	int brushCounter=0,MAX_BRUSH_COUNT=1000; //To avoid having millions of brushes
 	bool saving=false; //Flag to check if we are saving the texture
 
@@ -30,10 +30,9 @@ public class TexturePainter : MonoBehaviour {
         DoAction();
     }
 
-
     void Update ()
     {
-        brushColor = Color.red;//ColorSelector.GetColor ();	//Updates our painted color with the selected color
+        //brushColor = Color.red;//ColorSelector.GetColor ();	//Updates our painted color with the selected color
 		UpdateBrushCursor ();
 	}
 
@@ -67,7 +66,8 @@ public class TexturePainter : MonoBehaviour {
 	}
 	//To update at realtime the painting cursor on the mesh
 	void UpdateBrushCursor(){
-		Vector3 uvWorldPosition=Vector3.zero;
+        brushColor = BrushManager.Instance.CurrentBrushColor;
+        Vector3 uvWorldPosition=Vector3.zero;
 		if (HitTestUVPosition (ref uvWorldPosition) && !saving && (AppStateManager.Instance.CurrentAppState == AppStateManager.AppState.Ready)) {
 			brushCursor.SetActive(true);
 			brushCursor.transform.position =uvWorldPosition+brushContainer.transform.position;									
