@@ -25,19 +25,38 @@ namespace HoloToolkit.Unity
             get; set;
         }
 
-        private GestureRecognizer gestureRecognizer;
         private GameObject focusedObject;
+
+        // The universal tap gesture recogniszer
+        public GestureRecognizer gestureRecognizer { get; private set; }
+
+        public bool IsNavigating { get; private set; }
+
+        public Vector3 NavigationPosition { get; private set; }
+
 
         void Start()
         {
             // Create a new GestureRecognizer. Sign up for tapped events.
             gestureRecognizer = new GestureRecognizer();
-            gestureRecognizer.SetRecognizableGestures(GestureSettings.Tap);
+            gestureRecognizer.SetRecognizableGestures(GestureSettings.Tap | GestureSettings.NavigationX | GestureSettings.NavigationY | GestureSettings.NavigationZ);
 
             gestureRecognizer.TappedEvent += GestureRecognizer_TappedEvent;
 
             // Start looking for gestures.
             gestureRecognizer.StartCapturingGestures();
+
+            // Register for the NavigationStartedEvent with the NavigationRecognizer_NavigationStartedEvent function.
+            gestureRecognizer.NavigationStartedEvent += GestureRecognizer_NavigationStartedEvent;
+            // Register for the NavigationUpdatedEvent with the NavigationRecognizer_NavigationUpdatedEvent function.
+            gestureRecognizer.NavigationUpdatedEvent += GestureRecognizer_NavigationUpdatedEvent;
+            // Register for the NavigationCompletedEvent with the NavigationRecognizer_NavigationCompletedEvent function. 
+            gestureRecognizer.NavigationCompletedEvent += GestureRecognizer_NavigationCompletedEvent;
+            // Register for the NavigationCanceledEvent with the NavigationRecognizer_NavigationCanceledEvent function. 
+            gestureRecognizer.NavigationCanceledEvent += GestureRecognizer_NavigationCanceledEvent;
+
+
+
         }
 
         private void GestureRecognizer_TappedEvent(InteractionSourceKind source, int tapCount, Ray headRay)
@@ -79,6 +98,42 @@ namespace HoloToolkit.Unity
         {
             gestureRecognizer.StopCapturingGestures();
             gestureRecognizer.TappedEvent -= GestureRecognizer_TappedEvent;
+
+
+            gestureRecognizer.NavigationStartedEvent -= GestureRecognizer_NavigationStartedEvent;
+            gestureRecognizer.NavigationUpdatedEvent -= GestureRecognizer_NavigationUpdatedEvent;
+            gestureRecognizer.NavigationCompletedEvent -= GestureRecognizer_NavigationCompletedEvent;
+            gestureRecognizer.NavigationCanceledEvent -= GestureRecognizer_NavigationCanceledEvent;
+        }
+
+        private void GestureRecognizer_NavigationStartedEvent(InteractionSourceKind source, Vector3 relativePosition, Ray ray)
+        {
+            // 2.b: Set IsNavigating to be true.
+            IsNavigating = true;
+
+            // 2.b: Set NavigationPosition to be relativePosition.
+            NavigationPosition = relativePosition;
+        }
+
+        private void GestureRecognizer_NavigationUpdatedEvent(InteractionSourceKind source, Vector3 relativePosition, Ray ray)
+        {
+            // 2.b: Set IsNavigating to be true.
+            IsNavigating = true;
+
+            // 2.b: Set NavigationPosition to be relativePosition.
+            NavigationPosition = relativePosition;
+        }
+
+        private void GestureRecognizer_NavigationCompletedEvent(InteractionSourceKind source, Vector3 relativePosition, Ray ray)
+        {
+            // 2.b: Set IsNavigating to be false.
+            IsNavigating = false;
+        }
+
+        private void GestureRecognizer_NavigationCanceledEvent(InteractionSourceKind source, Vector3 relativePosition, Ray ray)
+        {
+            // 2.b: Set IsNavigating to be false.
+            IsNavigating = false;
         }
     }
 }
