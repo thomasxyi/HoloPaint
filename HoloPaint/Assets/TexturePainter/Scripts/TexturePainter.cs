@@ -79,7 +79,16 @@ public class TexturePainter : MonoBehaviour {
 	bool HitTestUVPosition(ref Vector3 uvWorldPosition){
 		RaycastHit hit = GazeManager.Instance.HitInfo;
 		if (GazeManager.Instance.Hit){
-			Vector2 pixelUV  = new Vector2(hit.textureCoord.x,hit.textureCoord.y);
+            Vector2 pixelUV;
+            if (HandsManager.Instance.HandDetected)
+            {
+                pixelUV = new Vector2(GestureManager.Instance.NavigationPosition.x, GestureManager.Instance.NavigationPosition.y);
+            } else
+            {
+                pixelUV = new Vector2(
+                    GestureManager.Instance.NavigationPosition.x + hit.textureCoord.x,
+                    GestureManager.Instance.NavigationPosition.y + hit.textureCoord.y);
+            }
 			uvWorldPosition.x=pixelUV.x-canvasCam.orthographicSize;//To center the UV on X
 			uvWorldPosition.y=pixelUV.y-canvasCam.orthographicSize;//To center the UV on Y
 			uvWorldPosition.z=0.0f;

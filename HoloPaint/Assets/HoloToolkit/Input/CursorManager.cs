@@ -41,7 +41,7 @@ public class CursorManager : Singleton<CursorManager>
             return;
         }
 
-        if (GazeManager.Instance.Hit && GestureManager.Instance.IsNavigating)
+        if (GazeManager.Instance.Hit)
         {
             CursorOnHolograms.SetActive(true);
             CursorOffHolograms.SetActive(false);
@@ -55,7 +55,8 @@ public class CursorManager : Singleton<CursorManager>
         // Place the cursor at the calculated position.
         if (GestureManager.Instance.IsNavigating)
         {
-            this.gameObject.transform.position = GestureManager.Instance.NavigationPosition + GazeManager.Instance.Normal * DistanceFromCollision;
+            
+            this.gameObject.transform.position = GazeManager.Instance.Position + GestureManager.Instance.NavigationPosition + GazeManager.Instance.Normal * DistanceFromCollision;
         }
         else
         {
