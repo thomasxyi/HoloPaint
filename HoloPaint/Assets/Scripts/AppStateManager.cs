@@ -45,4 +45,5 @@ public class AppStateManager : Singleton<AppStateManager>
                 break;
         }
     }
+
 }
