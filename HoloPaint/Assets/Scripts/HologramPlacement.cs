@@ -31,7 +31,7 @@ public class HologramPlacement : Singleton<HologramPlacement>
                 // have ray that intersects real world
                 pos = hitInfo.point;
                 // don't make object intersect with detection irregularities
-                pos.z += 0.2F;
+                pos.z -= 0.5F;
             }
             else
             {

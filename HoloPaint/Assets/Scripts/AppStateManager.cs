@@ -14,7 +14,7 @@ public class AppStateManager : Singleton<AppStateManager>
         Starting = 0,
         Placement,
         Menu,
-        Ready
+        Drawing
     }
 
     /// <summary>
@@ -37,7 +37,7 @@ public class AppStateManager : Singleton<AppStateManager>
                     SpatialMappingManager.Instance.DrawVisualMeshes = true;
                 }
                 break;
-            case AppState.Ready:
+            case AppState.Drawing:
                 if (SpatialMappingManager.Instance.DrawVisualMeshes)
                 {
                     SpatialMappingManager.Instance.DrawVisualMeshes = false;
