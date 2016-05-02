@@ -22,7 +22,7 @@ public class TexturePainter : MonoBehaviour {
 	Painter_BrushMode mode; //Our painter mode (Paint brushes or decals)
 	float brushSize=1.0f; //The size of our brush
 	Color brushColor = Color.red; //The selected color
-	int brushCounter=0,MAX_BRUSH_COUNT=1000; //To avoid having millions of brushes
+	int brushCounter=0,MAX_BRUSH_COUNT=100; //To avoid having millions of brushes
 	bool saving=false; //Flag to check if we are saving the texture
 
     void OnSelect()
@@ -77,8 +77,20 @@ public class TexturePainter : MonoBehaviour {
 	bool HitTestUVPosition(ref Vector3 uvWorldPosition){
 		RaycastHit hit = GazeManager.Instance.HitInfo;
 		if (GazeManager.Instance.Hit){
-			Vector2 pixelUV  = new Vector2(hit.textureCoord.x,hit.textureCoord.y);
-			uvWorldPosition.x=pixelUV.x-canvasCam.orthographicSize;//To center the UV on X
+            //Vector2 pixelUV = new Vector2(hit.textureCoord.x, hit.textureCoord.y);
+            Vector2 pixelUV;
+            if (GestureManager.Instance.IsNavigating)
+            {
+                pixelUV = new Vector2(
+                    GestureManager.Instance.NavigationPosition.x + hit.textureCoord.x,
+                    GestureManager.Instance.NavigationPosition.y + hit.textureCoord.y);
+            } else
+            {
+                pixelUV = new Vector2(
+                    hit.textureCoord.x,
+                    hit.textureCoord.y);
+            }
+            uvWorldPosition.x=pixelUV.x-canvasCam.orthographicSize;//To center the UV on X
 			uvWorldPosition.y=pixelUV.y-canvasCam.orthographicSize;//To center the UV on Y
 			uvWorldPosition.z=0.0f;
 			return true;
