@@ -39,7 +39,7 @@ namespace HoloToolkit.Unity
         {
             // Create a new GestureRecognizer. Sign up for tapped events.
             gestureRecognizer = new GestureRecognizer();
-            gestureRecognizer.SetRecognizableGestures(GestureSettings.Tap | GestureSettings.NavigationX | GestureSettings.NavigationY | GestureSettings.NavigationZ);
+            gestureRecognizer.SetRecognizableGestures(GestureSettings.Tap | GestureSettings.NavigationX | GestureSettings.NavigationY);
 
             gestureRecognizer.TappedEvent += GestureRecognizer_TappedEvent;
 
@@ -111,6 +111,11 @@ namespace HoloToolkit.Unity
             // 2.b: Set IsNavigating to be true.
             IsNavigating = true;
 
+            if (focusedObject != null)
+            {
+                focusedObject.SendMessage("OnSelect");
+            }
+
             // 2.b: Set NavigationPosition to be relativePosition.
             NavigationPosition = relativePosition;
         }
@@ -119,6 +124,11 @@ namespace HoloToolkit.Unity
         {
             // 2.b: Set IsNavigating to be true.
             IsNavigating = true;
+
+            if (focusedObject != null)
+            {
+                focusedObject.SendMessage("OnSelect");
+            }
 
             // 2.b: Set NavigationPosition to be relativePosition.
             NavigationPosition = relativePosition;
