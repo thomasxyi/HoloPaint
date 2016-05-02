@@ -9,6 +9,6 @@ public class PaintButton : MonoBehaviour
 {
 	public void OnSelect()
 	{
-        AppStateManager.Instance.CurrentAppState = AppStateManager.AppState.Ready;
+        AppStateManager.Instance.CurrentAppState = AppStateManager.AppState.Drawing;
     }
 }

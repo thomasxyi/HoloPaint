@@ -32,27 +32,35 @@ public class TexturePainter : MonoBehaviour {
 
     void Update ()
     {
-        //brushColor = Color.red;//ColorSelector.GetColor ();	//Updates our painted color with the selected color
-		UpdateBrushCursor ();
-	}
+        //To update at realtime the painting cursor on the mesh
+        brushColor = BrushManager.Instance.CurrentBrushColor;
+        Vector3 uvWorldPosition = Vector3.zero;
+        if (HitTestUVPosition(ref uvWorldPosition) && !saving && (AppStateManager.Instance.CurrentAppState == AppStateManager.AppState.Drawing))
+        {
+            brushCursor.SetActive(true);
+            brushCursor.transform.position = uvWorldPosition + brushContainer.transform.position;
+        }
+        else {
+            brushCursor.SetActive(false);
+        }
+    }
 
     //The main action, instantiates a brush or decal entity at the clicked position on the UV map
     void DoAction(){	
-		if (saving || (AppStateManager.Instance.CurrentAppState != AppStateManager.AppState.Ready))
+		if (saving || (AppStateManager.Instance.CurrentAppState != AppStateManager.AppState.Drawing))
 			return;
 		Vector3 uvWorldPosition=Vector3.zero;		
 		if(HitTestUVPosition(ref uvWorldPosition)){
 			GameObject brushObj;
 			if(mode==Painter_BrushMode.PAINT){
-
 				brushObj=(GameObject)Instantiate(Resources.Load("TexturePainter-Instances/SolidBrushEntity")); //Paint a brush
-				brushObj.GetComponent<SpriteRenderer>().color=brushColor; //Set the brush color
 			}
 			else{
 				brushObj=(GameObject)Instantiate(Resources.Load("TexturePainter-Instances/DecalEntity")); //Paint a decal
-			}
-			brushColor.a=brushSize*2.0f; // Brushes have alpha to have a merging effect when painted over.
-			brushObj.transform.parent=brushContainer.transform; //Add the brush to our container to be wiped later
+            }
+            brushColor.a=brushSize*2.0f; // Brushes have alpha to have a merging effect when painted over.
+            brushObj.GetComponent<SpriteRenderer>().color = brushColor; //Set the brush color
+            brushObj.transform.parent=brushContainer.transform; //Add the brush to our container to be wiped later
 			brushObj.transform.localPosition=uvWorldPosition; //The position of the brush (in the UVMap)
 			brushObj.transform.localScale=Vector3.one*brushSize;//The size of the brush
 		}
@@ -64,17 +72,7 @@ public class TexturePainter : MonoBehaviour {
 			
 		}
 	}
-	//To update at realtime the painting cursor on the mesh
-	void UpdateBrushCursor(){
-        brushColor = BrushManager.Instance.CurrentBrushColor;
-        Vector3 uvWorldPosition=Vector3.zero;
-		if (HitTestUVPosition (ref uvWorldPosition) && !saving && (AppStateManager.Instance.CurrentAppState == AppStateManager.AppState.Ready)) {
-			brushCursor.SetActive(true);
-			brushCursor.transform.position =uvWorldPosition+brushContainer.transform.position;									
-		} else {
-			brushCursor.SetActive(false);
-		}		
-	}
+
 	//Returns the position on the texuremap according to a hit in the mesh collider
 	bool HitTestUVPosition(ref Vector3 uvWorldPosition){
 		RaycastHit hit = GazeManager.Instance.HitInfo;

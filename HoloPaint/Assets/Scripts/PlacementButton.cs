@@ -17,9 +17,9 @@ public class PlacementButton : MonoBehaviour
                 AppStateManager.Instance.CurrentAppState = AppStateManager.AppState.Placement;
                 break;
             case AppStateManager.AppState.Placement:
-                AppStateManager.Instance.CurrentAppState = AppStateManager.AppState.Ready;
+                AppStateManager.Instance.CurrentAppState = AppStateManager.AppState.Drawing;
                 break;
-            case AppStateManager.AppState.Ready:
+            case AppStateManager.AppState.Drawing:
                 AppStateManager.Instance.CurrentAppState = AppStateManager.AppState.Placement;
                 break;
         }
