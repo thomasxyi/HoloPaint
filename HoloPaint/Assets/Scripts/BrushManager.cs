@@ -8,10 +8,7 @@ public class BrushManager : Singleton<BrushManager>
 {
     private Color color;
 
-    public Color CurrentBrushColor { get { return this.color; }
-                                     set { this.color = value;
-            ((GameObject)Instantiate(Resources.Load("TexturePainter-Instances/SolidBrushEntity"))).GetComponent<Material>().color = value;
-        } }
+    public Color CurrentBrushColor { get; set; }
 
     void Start()
     {
