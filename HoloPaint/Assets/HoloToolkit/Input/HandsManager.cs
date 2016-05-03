@@ -27,6 +27,7 @@ namespace HoloToolkit.Unity
         {
             InteractionManager.SourceDetected += InteractionManager_SourceDetected;
             InteractionManager.SourceLost += InteractionManager_SourceLost;
+
         }
 
         private void InteractionManager_SourceDetected(InteractionSourceState state)
