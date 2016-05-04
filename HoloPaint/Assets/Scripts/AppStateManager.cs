@@ -29,16 +29,17 @@ public class AppStateManager : Singleton<AppStateManager>
 
     void Update()
     {
+        bool meshes = SpatialMappingManager.Instance.DrawVisualMeshes;
         switch (CurrentAppState)
         {
             case AppState.Placement:
-                if (!SpatialMappingManager.Instance.DrawVisualMeshes)
+                if (!meshes)
                 {
                     SpatialMappingManager.Instance.DrawVisualMeshes = true;
                 }
                 break;
             case AppState.Drawing:
-                if (SpatialMappingManager.Instance.DrawVisualMeshes)
+                if (meshes)
                 {
                     SpatialMappingManager.Instance.DrawVisualMeshes = false;
                 }

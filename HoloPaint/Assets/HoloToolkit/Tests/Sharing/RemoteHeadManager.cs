@@ -27,7 +27,7 @@ public class RemoteHeadManager : Singleton<RemoteHeadManager>
 
     void Start()
     {
-        CustomMessages.Instance.MessageHandlers[CustomMessages.TestMessageID.HeadTransform] = this.UpdateHeadTransform;
+        CustomMessages.Instance.MessageHandlers[CustomMessages.HoloPaintMessageID.HeadTransform] = this.UpdateHeadTransform;
 
         SharingSessionTracker.Instance.SessionJoined += Instance_SessionJoined;
         SharingSessionTracker.Instance.SessionLeft += Instance_SessionLeft;

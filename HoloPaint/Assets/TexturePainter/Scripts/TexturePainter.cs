@@ -10,6 +10,7 @@ using UnityEngine.UI;
 using System.Collections;
 using HoloToolkit.Unity;
 using UnityEngine.VR.WSA.Input;
+using HoloToolkit.Sharing;
 
 public enum Painter_BrushMode{PAINT,DECAL};
 public class TexturePainter : MonoBehaviour {
@@ -24,6 +25,32 @@ public class TexturePainter : MonoBehaviour {
 	Color brushColor = Color.red; //The selected color
 	int brushCounter=0,MAX_BRUSH_COUNT=100; //To avoid having millions of brushes
 	bool saving=false; //Flag to check if we are saving the texture
+
+    void Start()
+    {
+        CustomMessages.Instance.MessageHandlers[CustomMessages.HoloPaintMessageID.Texture2D] = this.OnTexture2DReceived;
+    }
+
+
+    void OnTexture2DReceived(NetworkInMessage msg)
+    {
+        // We read the user ID but we don't use it here.
+        msg.ReadInt64();
+
+        int w = msg.ReadInt32();
+        int h = msg.ReadInt32();
+
+        uint len = (uint)msg.ReadInt32();
+        byte[] data = new byte[len];
+
+        msg.ReadArray(data, len);
+
+        Texture2D tex = new Texture2D(w, h);
+
+        tex.LoadImage(data);
+
+        baseMaterial.mainTexture = tex;
+    }
 
     void OnSelect()
     {
@@ -110,6 +137,7 @@ public class TexturePainter : MonoBehaviour {
 		tex.Apply ();
 		RenderTexture.active = null;
 		baseMaterial.mainTexture =tex;	//Put the painted texture as the base
+        CustomMessages.Instance.SendTexture2D(tex);
 		foreach (Transform child in brushContainer.transform) {//Clear brushes
 			Destroy(child.gameObject);
 		}
