@@ -25,6 +25,9 @@ public class TexturePainter : MonoBehaviour {
 	int brushCounter=0,MAX_BRUSH_COUNT=100; //To avoid having millions of brushes
 	bool saving=false; //Flag to check if we are saving the texture
 
+    float gazeX; //Record the gaze position and don't change while navigating
+    float gazeY;
+
     void OnSelect()
     {
         DoAction();
@@ -76,16 +79,19 @@ public class TexturePainter : MonoBehaviour {
 	//Returns the position on the texuremap according to a hit in the mesh collider
 	bool HitTestUVPosition(ref Vector3 uvWorldPosition){
 		RaycastHit hit = GazeManager.Instance.HitInfo;
-		if (GazeManager.Instance.Hit){
+
+        if (GazeManager.Instance.Hit){
             //Vector2 pixelUV = new Vector2(hit.textureCoord.x, hit.textureCoord.y);
             Vector2 pixelUV;
             if (GestureManager.Instance.IsNavigating)
             {
                 pixelUV = new Vector2(
-                    GestureManager.Instance.NavigationPosition.x + hit.textureCoord.x,
-                    GestureManager.Instance.NavigationPosition.y + hit.textureCoord.y);
+                    GestureManager.Instance.NavigationPosition.x + gazeX,
+                    GestureManager.Instance.NavigationPosition.y + gazeY);
             } else
             {
+                gazeX = hit.textureCoord.x;
+                gazeY = hit.textureCoord.y;
                 pixelUV = new Vector2(
                     hit.textureCoord.x,
                     hit.textureCoord.y);
@@ -95,7 +101,8 @@ public class TexturePainter : MonoBehaviour {
 			uvWorldPosition.z=0.0f;
 			return true;
 		}
-		else{		
+		else{
+            		
 			return false;
 		}
 		
