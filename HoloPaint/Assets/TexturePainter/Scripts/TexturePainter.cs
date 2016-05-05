@@ -29,9 +29,9 @@ public class TexturePainter : MonoBehaviour {
     void Start()
     {
         CustomMessages.Instance.MessageHandlers[CustomMessages.HoloPaintMessageID.Texture2D] = this.OnTexture2DReceived;
+        CustomMessages.Instance.MessageHandlers[CustomMessages.HoloPaintMessageID.DrawSprite] = this.OnDrawSprite;
     }
-
-
+    
     void OnTexture2DReceived(NetworkInMessage msg)
     {
         // We read the user ID but we don't use it here.
@@ -52,9 +52,31 @@ public class TexturePainter : MonoBehaviour {
         baseMaterial.mainTexture = tex;
     }
 
+    void OnDrawSprite(NetworkInMessage msg)
+    {
+        // We read the user ID but we don't use it here.
+        msg.ReadInt64();
+
+        Vector3 uvWorldPosition = CustomMessages.Instance.ReadVector3(msg);
+
+        float r = msg.ReadFloat();
+        float g = msg.ReadFloat();
+        float b = msg.ReadFloat();
+        float a = msg.ReadFloat();
+
+        DoAction(uvWorldPosition, new Color(r, g, b, a));
+    }
+
     void OnSelect()
     {
-        DoAction();
+        if (saving || (AppStateManager.Instance.CurrentAppState != AppStateManager.AppState.Drawing))
+            return;
+        Vector3 uvWorldPosition = Vector3.zero;
+        if (HitTestUVPosition(ref uvWorldPosition))
+        {
+            DoAction(uvWorldPosition, brushColor);
+            CustomMessages.Instance.SendDrawSprite(uvWorldPosition, brushColor);
+        }
     }
 
     void Update ()
@@ -73,25 +95,23 @@ public class TexturePainter : MonoBehaviour {
     }
 
     //The main action, instantiates a brush or decal entity at the clicked position on the UV map
-    void DoAction(){	
-		if (saving || (AppStateManager.Instance.CurrentAppState != AppStateManager.AppState.Drawing))
-			return;
-		Vector3 uvWorldPosition=Vector3.zero;		
-		if(HitTestUVPosition(ref uvWorldPosition)){
-			GameObject brushObj;
-			if(mode==Painter_BrushMode.PAINT){
-				brushObj=(GameObject)Instantiate(Resources.Load("TexturePainter-Instances/SolidBrushEntity")); //Paint a brush
-			}
-			else{
-				brushObj=(GameObject)Instantiate(Resources.Load("TexturePainter-Instances/DecalEntity")); //Paint a decal
-            }
-            brushColor.a=brushSize*2.0f; // Brushes have alpha to have a merging effect when painted over.
-            brushObj.GetComponent<SpriteRenderer>().color = brushColor; //Set the brush color
-            brushObj.transform.parent=brushContainer.transform; //Add the brush to our container to be wiped later
-			brushObj.transform.localPosition=uvWorldPosition; //The position of the brush (in the UVMap)
-			brushObj.transform.localScale=Vector3.one*brushSize;//The size of the brush
-		}
-		brushCounter++; //Add to the max brushes
+    void DoAction(Vector3 uvWorldPosition, Color bColor)
+    {
+        GameObject brushObj;
+        if (mode == Painter_BrushMode.PAINT)
+        {
+            brushObj = (GameObject)Instantiate(Resources.Load("TexturePainter-Instances/SolidBrushEntity")); //Paint a brush
+        }
+        else
+        {
+            brushObj = (GameObject)Instantiate(Resources.Load("TexturePainter-Instances/DecalEntity")); //Paint a decal
+        }
+        bColor.a = brushSize * 2.0f; // Brushes have alpha to have a merging effect when painted over.
+        brushObj.GetComponent<SpriteRenderer>().color = bColor; //Set the brush color
+        brushObj.transform.parent = brushContainer.transform; //Add the brush to our container to be wiped later
+        brushObj.transform.localPosition = uvWorldPosition; //The position of the brush (in the UVMap)
+        brushObj.transform.localScale = Vector3.one * brushSize;//The size of the brush
+        brushCounter++; //Add to the max brushes
 		if (brushCounter >= MAX_BRUSH_COUNT) { //If we reach the max brushes available, flatten the texture and clear the brushes
 			brushCursor.SetActive (false);
 			saving=true;
@@ -137,7 +157,7 @@ public class TexturePainter : MonoBehaviour {
 		tex.Apply ();
 		RenderTexture.active = null;
 		baseMaterial.mainTexture =tex;	//Put the painted texture as the base
-        CustomMessages.Instance.SendTexture2D(tex);
+        //CustomMessages.Instance.SendTexture2D(tex);
 		foreach (Transform child in brushContainer.transform) {//Clear brushes
 			Destroy(child.gameObject);
 		}

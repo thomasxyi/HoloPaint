@@ -18,6 +18,7 @@ public class CustomMessages : Singleton<CustomMessages>
         HeadTransform = MessageID.UserMessageIDStart,
         BoardTransform,
         Texture2D,
+        DrawSprite,
         Max
     }
 
@@ -148,6 +149,29 @@ public class CustomMessages : Singleton<CustomMessages>
             byte[] png = tex.EncodeToPNG();
             msg.Write(png.Length);
             msg.WriteArray(png, (uint)png.Length);
+
+            // Send the message as a broadcast, which will cause the server to forward it to all other users in the session.  
+            this.serverConnection.Broadcast(
+                msg,
+                MessagePriority.Immediate,
+                MessageReliability.ReliableOrdered,
+                MessageChannel.Avatar);
+        }
+    }
+
+    public void SendDrawSprite(Vector3 uvWorldPosition, Color brushColor)
+    {
+        // If we are connected to a session, broadcast our head info
+        if (this.serverConnection != null && this.serverConnection.IsConnected())
+        {
+            // Create an outgoing network message to contain all the info we want to send
+            NetworkOutMessage msg = CreateMessage((byte)HoloPaintMessageID.DrawSprite);
+
+            AppendVector3(msg, uvWorldPosition);
+            msg.Write(brushColor.r);
+            msg.Write(brushColor.g);
+            msg.Write(brushColor.b);
+            msg.Write(brushColor.a);
 
             // Send the message as a broadcast, which will cause the server to forward it to all other users in the session.  
             this.serverConnection.Broadcast(
