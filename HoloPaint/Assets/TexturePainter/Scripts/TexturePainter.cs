@@ -25,6 +25,7 @@ public class TexturePainter : MonoBehaviour {
 	int brushCounter=0,MAX_BRUSH_COUNT=100; //To avoid having millions of brushes
 	bool saving=false; //Flag to check if we are saving the texture
 
+    bool drawing = false;
     float gazeX; //Record the gaze position and don't change while navigating
     float gazeY;
 
@@ -80,32 +81,47 @@ public class TexturePainter : MonoBehaviour {
 	bool HitTestUVPosition(ref Vector3 uvWorldPosition){
 		RaycastHit hit = GazeManager.Instance.HitInfo;
 
-        if (GazeManager.Instance.Hit){
-            //Vector2 pixelUV = new Vector2(hit.textureCoord.x, hit.textureCoord.y);
-            Vector2 pixelUV;
+        Vector2 pixelUV;
+
+        if (!GestureManager.Instance.IsNavigating)
+        {
+            // user released navigation gesture
+            // reset drawing
+            drawing = false;
+        }
+        
+        if (drawing)
+        {
+            // user is drawing currently
+            // draw based on saved gaze position
+            pixelUV = new Vector2(
+                GestureManager.Instance.NavigationPosition.x + gazeX,
+                GestureManager.Instance.NavigationPosition.y + gazeY);
+        }
+        else if (GazeManager.Instance.Hit)
+        {
             if (GestureManager.Instance.IsNavigating)
             {
-                pixelUV = new Vector2(
-                    GestureManager.Instance.NavigationPosition.x + gazeX,
-                    GestureManager.Instance.NavigationPosition.y + gazeY);
-            } else
-            {
+                // first drawing stroke by user
+                // save current gaze focus
                 gazeX = hit.textureCoord.x;
                 gazeY = hit.textureCoord.y;
-                pixelUV = new Vector2(
-                    hit.textureCoord.x,
-                    hit.textureCoord.y);
+                drawing = true;
             }
-            uvWorldPosition.x=pixelUV.x-canvasCam.orthographicSize;//To center the UV on X
-			uvWorldPosition.y=pixelUV.y-canvasCam.orthographicSize;//To center the UV on Y
-			uvWorldPosition.z=0.0f;
-			return true;
-		}
-		else{
-            		
-			return false;
-		}
-		
+            pixelUV = new Vector2(
+                hit.textureCoord.x,
+                hit.textureCoord.y);
+        }
+        else
+        {
+            // not a valid action, dont do anything
+            return false;
+        }
+
+        uvWorldPosition.x = pixelUV.x - canvasCam.orthographicSize;//To center the UV on X
+        uvWorldPosition.y = pixelUV.y - canvasCam.orthographicSize;//To center the UV on Y
+        uvWorldPosition.z = 0.0f;
+        return true;
 	}
 	//Sets the base material with a our canvas texture, then removes all our brushes
 	void SaveTexture(){		
