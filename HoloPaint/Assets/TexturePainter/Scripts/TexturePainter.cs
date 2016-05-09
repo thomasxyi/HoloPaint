@@ -132,6 +132,11 @@ public class TexturePainter : MonoBehaviour {
 		brushCursor.transform.localScale = Vector3.one * brushSize;
 	}
 
+    public void ClearTexture()
+    {
+        baseMaterial.mainTexture = new Texture2D(canvasTexture.width, canvasTexture.height, TextureFormat.RGB24, false);
+    }
+
 	////////////////// OPTIONAL METHODS //////////////////
 
 	#if !UNITY_WEBPLAYER 
