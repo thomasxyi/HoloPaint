@@ -52,11 +52,18 @@ public class CursorManager : Singleton<CursorManager>
             CursorOnHolograms.SetActive(false);
         }
 
+        //if (AppStateManager.Instance.CurrentAppState == AppStateManager.AppState.Drawing)
+        //{
+
+        //}
+
         // Place the cursor at the calculated position.
         if (GestureManager.Instance.IsNavigating)
         {
-            
-            this.gameObject.transform.position = GazeManager.Instance.Position + GestureManager.Instance.NavigationPosition + GazeManager.Instance.Normal * DistanceFromCollision;
+
+            //this.gameObject.transform.position = GazeManager.Instance.Position + GestureManager.Instance.NavigationPosition + GazeManager.Instance.Normal * DistanceFromCollision;
+            CursorOnHolograms.SetActive(false);
+            CursorOffHolograms.SetActive(false);
         }
         else
         {
