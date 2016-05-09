@@ -29,24 +29,6 @@ public class AppStateManager : Singleton<AppStateManager>
 
     void Update()
     {
-        switch (CurrentAppState)
-        {
-            case AppState.Placement:
-                if (!SpatialMappingManager.Instance.DrawVisualMeshes)
-                {
-                    SpatialMappingManager.Instance.DrawVisualMeshes = true;
-                }
-                break;
-            case AppState.Drawing:
-                if (SpatialMappingManager.Instance.DrawVisualMeshes)
-                {
-                    SpatialMappingManager.Instance.DrawVisualMeshes = false;
-                }
-                break;
-            case AppState.AddBoard:
-
-                break;
-        }
     }
 
 }
