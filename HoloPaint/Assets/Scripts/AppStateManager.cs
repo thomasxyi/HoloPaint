@@ -13,8 +13,8 @@ public class AppStateManager : Singleton<AppStateManager>
     {
         Starting = 0,
         Placement,
-        Menu,
-        Drawing
+        Drawing,
+        AddBoard
     }
 
     /// <summary>
@@ -42,6 +42,9 @@ public class AppStateManager : Singleton<AppStateManager>
                 {
                     SpatialMappingManager.Instance.DrawVisualMeshes = false;
                 }
+                break;
+            case AppState.AddBoard:
+
                 break;
         }
     }
