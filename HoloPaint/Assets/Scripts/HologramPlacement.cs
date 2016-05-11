@@ -16,12 +16,6 @@ public class HologramPlacement : Singleton<HologramPlacement>
     void Start()
     {
         Placed = true;
-
-        // We care about getting updates for the model transform.
-        CustomMessages.Instance.MessageHandlers[CustomMessages.HoloPaintMessageID.BoardTransform] = this.OnStageTransfrom;
-
-        // And when a new user join we will send the model transform we have.
-        SharingSessionTracker.Instance.SessionJoined += Instance_SessionJoined;
     }
 
     void Update()
@@ -37,7 +31,7 @@ public class HologramPlacement : Singleton<HologramPlacement>
                 // have ray that intersects real world
                 pos = hitInfo.point;
                 // don't make object intersect with detection irregularities
-                pos.z += 0.2F;
+                pos.z += 0.5F;
             }
             else
             {
@@ -56,34 +50,6 @@ public class HologramPlacement : Singleton<HologramPlacement>
         }
     }
 
-    /// <summary>
-    /// When a new user joins we want to send them the relative transform for the model if we have it.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void Instance_SessionJoined(object sender, SharingSessionTracker.SessionJoinedEventArgs e)
-    {
-        if (Placed)
-        {
-            CustomMessages.Instance.SendBoardTransform(transform.localPosition, transform.localRotation);
-        }
-    }
-
-    /// <summary>
-    /// When a remote system has a transform for us, we'll get it here.
-    /// </summary>
-    /// <param name="msg"></param>
-    void OnStageTransfrom(NetworkInMessage msg)
-    {
-        // We read the user ID but we don't use it here.
-        msg.ReadInt64();
-
-        transform.localPosition = CustomMessages.Instance.ReadVector3(msg);
-        transform.localRotation = CustomMessages.Instance.ReadQuaternion(msg);
-
-        Placed = true;
-    }
-
     public void OnSelect()
     {
         if (AppStateManager.Instance.CurrentAppState == AppStateManager.AppState.Placement)
@@ -92,10 +58,6 @@ public class HologramPlacement : Singleton<HologramPlacement>
             // if not placed already, place the game object
             GestureManager.Instance.OverrideFocusedObject = (Placed ? this.gameObject : null);
             Placed = !Placed;
-            if (Placed)
-            {
-                CustomMessages.Instance.SendBoardTransform(transform.localPosition, transform.localRotation);
-            }
         }
     }
 }

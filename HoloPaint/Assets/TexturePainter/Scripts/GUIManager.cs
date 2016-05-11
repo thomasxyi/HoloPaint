@@ -12,7 +12,4 @@ public class GUIManager : MonoBehaviour {
 		guiTextMode.text="<b>Mode:</b><color="+colorText+">"+brushMode.ToString()+"</color>";
 		painter.SetBrushMode (brushMode);
 	}
-	public void UpdateSizeSlider(){
-		painter.SetBrushSize (sizeSlider.value);
-	}
 }

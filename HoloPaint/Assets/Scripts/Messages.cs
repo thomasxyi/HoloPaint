@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using HoloToolkit.Unity;
 using HoloToolkit.Sharing;
 
-public class CustomMessages : Singleton<CustomMessages>
+public class Messages : Singleton<Messages>
 {
     /// <summary>
     /// Message enum containing our information bytes to share.
@@ -15,9 +15,7 @@ public class CustomMessages : Singleton<CustomMessages>
     /// </summary>
     public enum HoloPaintMessageID : byte
     {
-        HeadTransform = MessageID.UserMessageIDStart,
-        BoardTransform,
-        Texture2D,
+        Texture2D = MessageID.UserMessageIDStart,
         DrawSprite,
         Max
     }
@@ -75,7 +73,7 @@ public class CustomMessages : Singleton<CustomMessages>
         // Cache the local user ID
         this.localUserID = SharingStage.Instance.Manager.GetLocalUser().GetID();
 
-        for (byte index = (byte)HoloPaintMessageID.HeadTransform; index < (byte)HoloPaintMessageID.Max; index++)
+        for (byte index = (byte)HoloPaintMessageID.Texture2D; index < (byte)HoloPaintMessageID.Max; index++)
         {
             if (MessageHandlers.ContainsKey((HoloPaintMessageID)index) == false)
             {
@@ -93,34 +91,6 @@ public class CustomMessages : Singleton<CustomMessages>
         // Add the local userID so that the remote clients know whose message they are receiving
         msg.Write(localUserID);
         return msg;
-    }
-
-    public void SendHeadTransform(Vector3 position, Quaternion rotation)
-    {
-        // If we are connected to a session, broadcast our head info
-        if (this.serverConnection != null && this.serverConnection.IsConnected())
-        {
-            // Create an outgoing network message to contain all the info we want to send
-            NetworkOutMessage msg = CreateMessage((byte)HoloPaintMessageID.HeadTransform);
-
-            AppendTransform(msg, position, rotation);
-
-            // Send the message as a broadcast, which will cause the server to forward it to all other users in the session.
-        }
-    }
-
-    public void SendBoardTransform(Vector3 position, Quaternion rotation)
-    {
-        // If we are connected to a session, broadcast our head info
-        if (this.serverConnection != null && this.serverConnection.IsConnected())
-        {
-            // Create an outgoing network message to contain all the info we want to send
-            NetworkOutMessage msg = CreateMessage((byte)HoloPaintMessageID.BoardTransform);
-
-            AppendTransform(msg, position, rotation);
-
-            // Send the message as a broadcast, which will cause the server to forward it to all other users in the session.
-        }
     }
 
     public void SendTexture2D(Texture2D tex)
@@ -149,7 +119,7 @@ public class CustomMessages : Singleton<CustomMessages>
         }
     }
 
-    public void SendDrawSprite(Vector3 uvWorldPosition, Color brushColor)
+    public void SendDrawSprite(Vector3 uvWorldPosition, Color brushColor, float brushSize)
     {
         // If we are connected to a session, broadcast our head info
         if (this.serverConnection != null && this.serverConnection.IsConnected())
@@ -162,6 +132,7 @@ public class CustomMessages : Singleton<CustomMessages>
             msg.Write(brushColor.g);
             msg.Write(brushColor.b);
             msg.Write(brushColor.a);
+            msg.Write(brushSize);
 
             // Send the message as a broadcast, which will cause the server to forward it to all other users in the session.  
             this.serverConnection.Broadcast(
@@ -176,7 +147,7 @@ public class CustomMessages : Singleton<CustomMessages>
     {
         if (this.serverConnection != null)
         {
-            for (byte index = (byte)HoloPaintMessageID.HeadTransform; index < (byte)HoloPaintMessageID.Max; index++)
+            for (byte index = (byte)HoloPaintMessageID.Texture2D; index < (byte)HoloPaintMessageID.Max; index++)
             {
                 this.serverConnection.RemoveListener(index, this.connectionAdapter);
             }
