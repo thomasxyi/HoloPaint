@@ -19,9 +19,9 @@ public class TexturePainter : Singleton<TexturePainter> {
 	public Sprite cursorPaint,cursorDecal; // Cursor for the differen functions 
 	public RenderTexture canvasTexture; // Render Texture that looks at our Base Texture and the painted brushes
     public Material SpriteLayer; // The material of our base texture (Were we will save the painted texture)
-    public Material baseMaterial; // The material of our base texture (Were we will save the painted texture)
+    public Material backgroundLayer; // The material of immutable background image
 
-	Painter_BrushMode mode; //Our painter mode (Paint brushes or decals)
+    Painter_BrushMode mode; //Our painter mode (Paint brushes or decals)
 	float brushSize=1.0f; //The size of our brush
 	Color brushColor = Color.red; //The selected color
 	int brushCounter=0,MAX_BRUSH_COUNT=100; //To avoid having millions of brushes
@@ -191,17 +191,22 @@ public class TexturePainter : Singleton<TexturePainter> {
     }
 
 	//Sets the base material with a our canvas texture, then removes all our brushes
-	void SaveTexture(bool clear){		
+	void SaveTexture(bool clear){
 		brushCounter=0;
 		System.DateTime date = System.DateTime.Now;
-        if (!clear)
+        Texture2D tex;
+        if (clear)
+        {
+            tex = backgroundLayer.mainTexture as Texture2D;
+        }
+        else
         {
             RenderTexture.active = canvasTexture;
+            tex = new Texture2D(canvasTexture.width, canvasTexture.height, TextureFormat.RGB24, false);
+            tex.ReadPixels(new Rect(0, 0, canvasTexture.width, canvasTexture.height), 0, 0);
+            tex.Apply();
+            RenderTexture.active = null;
         }
-		Texture2D tex = new Texture2D(canvasTexture.width, canvasTexture.height, TextureFormat.RGB24, false);		
-		tex.ReadPixels (new Rect (0, 0, canvasTexture.width, canvasTexture.height), 0, 0);
-		tex.Apply ();
-		RenderTexture.active = null;
         SpriteLayer.mainTexture = tex;	//Put the painted texture as the base
         //Messages.Instance.SendTexture2D(tex);
 		foreach (Transform child in brushContainer.transform) {//Clear brushes
