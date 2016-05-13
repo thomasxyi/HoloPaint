@@ -105,6 +105,7 @@ namespace HoloToolkit.Unity
 
         private void GestureRecognizer_NavigationStartedEvent(InteractionSourceKind source, Vector3 relativePosition, Ray ray)
         {
+            Debug.Log("Navigation Started");
             // 2.b: Set IsNavigating to be true.
             IsNavigating = true;
 
@@ -133,12 +134,14 @@ namespace HoloToolkit.Unity
 
         private void GestureRecognizer_NavigationCompletedEvent(InteractionSourceKind source, Vector3 relativePosition, Ray ray)
         {
+            Debug.Log("Navigation Completed");
             // 2.b: Set IsNavigating to be false.
             IsNavigating = false;
         }
 
         private void GestureRecognizer_NavigationCanceledEvent(InteractionSourceKind source, Vector3 relativePosition, Ray ray)
         {
+            Debug.Log("Navigation Cancelled");
             // 2.b: Set IsNavigating to be false.
             IsNavigating = false;
         }
