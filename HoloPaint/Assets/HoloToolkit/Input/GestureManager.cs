@@ -32,25 +32,25 @@ namespace HoloToolkit.Unity
 
         public bool IsNavigating { get; private set; }
 
-        public Vector3 NavigationPosition { get; private set; }
+        public Vector3 ManipulationPosition { get; private set; }
 
 
         void Start()
         {
             // Create a new GestureRecognizer. Sign up for tapped events.
             gestureRecognizer = new GestureRecognizer();
-            gestureRecognizer.SetRecognizableGestures(GestureSettings.Tap | GestureSettings.NavigationX | GestureSettings.NavigationY);
+            gestureRecognizer.SetRecognizableGestures(GestureSettings.Tap | GestureSettings.ManipulationTranslate);
 
             gestureRecognizer.TappedEvent += GestureRecognizer_TappedEvent;
 
-            // Register for the NavigationStartedEvent with the NavigationRecognizer_NavigationStartedEvent function.
-            gestureRecognizer.NavigationStartedEvent += GestureRecognizer_NavigationStartedEvent;
-            // Register for the NavigationUpdatedEvent with the NavigationRecognizer_NavigationUpdatedEvent function.
-            gestureRecognizer.NavigationUpdatedEvent += GestureRecognizer_NavigationUpdatedEvent;
-            // Register for the NavigationCompletedEvent with the NavigationRecognizer_NavigationCompletedEvent function. 
-            gestureRecognizer.NavigationCompletedEvent += GestureRecognizer_NavigationCompletedEvent;
-            // Register for the NavigationCanceledEvent with the NavigationRecognizer_NavigationCanceledEvent function. 
-            gestureRecognizer.NavigationCanceledEvent += GestureRecognizer_NavigationCanceledEvent;
+            // Register for the ManipulationStartedEvent with the ManipulationRecognizer_ManipulationStartedEvent function.
+            gestureRecognizer.ManipulationStartedEvent += GestureRecognizer_ManipulationStartedEvent;
+            // Register for the ManipulationUpdatedEvent with the ManipulationRecognizer_ManipulationUpdatedEvent function.
+            gestureRecognizer.ManipulationUpdatedEvent += GestureRecognizer_ManipulationUpdatedEvent;
+            // Register for the ManipulationCompletedEvent with the ManipulationRecognizer_ManipulationCompletedEvent function. 
+            gestureRecognizer.ManipulationCompletedEvent += GestureRecognizer_ManipulationCompletedEvent;
+            // Register for the ManipulationCanceledEvent with the ManipulationRecognizer_ManipulationCanceledEvent function. 
+            gestureRecognizer.ManipulationCanceledEvent += GestureRecognizer_ManipulationCanceledEvent;
 
             // Start looking for gestures.
             gestureRecognizer.StartCapturingGestures();
@@ -97,15 +97,15 @@ namespace HoloToolkit.Unity
             gestureRecognizer.TappedEvent -= GestureRecognizer_TappedEvent;
 
 
-            gestureRecognizer.NavigationStartedEvent -= GestureRecognizer_NavigationStartedEvent;
-            gestureRecognizer.NavigationUpdatedEvent -= GestureRecognizer_NavigationUpdatedEvent;
-            gestureRecognizer.NavigationCompletedEvent -= GestureRecognizer_NavigationCompletedEvent;
-            gestureRecognizer.NavigationCanceledEvent -= GestureRecognizer_NavigationCanceledEvent;
+            gestureRecognizer.ManipulationStartedEvent -= GestureRecognizer_ManipulationStartedEvent;
+            gestureRecognizer.ManipulationUpdatedEvent -= GestureRecognizer_ManipulationUpdatedEvent;
+            gestureRecognizer.ManipulationCompletedEvent -= GestureRecognizer_ManipulationCompletedEvent;
+            gestureRecognizer.ManipulationCanceledEvent -= GestureRecognizer_ManipulationCanceledEvent;
         }
 
-        private void GestureRecognizer_NavigationStartedEvent(InteractionSourceKind source, Vector3 relativePosition, Ray ray)
+        private void GestureRecognizer_ManipulationStartedEvent(InteractionSourceKind source, Vector3 relativePosition, Ray ray)
         {
-            Debug.Log("Navigation Started");
+            Debug.Log("Manipulation Started");
             // 2.b: Set IsNavigating to be true.
             IsNavigating = true;
 
@@ -114,11 +114,11 @@ namespace HoloToolkit.Unity
                 focusedObject.SendMessage("OnSelect");
             }
 
-            // 2.b: Set NavigationPosition to be relativePosition.
-            NavigationPosition = relativePosition;
+            // 2.b: Set ManipulationPosition to be relativePosition.
+            ManipulationPosition = relativePosition;
         }
 
-        private void GestureRecognizer_NavigationUpdatedEvent(InteractionSourceKind source, Vector3 relativePosition, Ray ray)
+        private void GestureRecognizer_ManipulationUpdatedEvent(InteractionSourceKind source, Vector3 relativePosition, Ray ray)
         {
             // 2.b: Set IsNavigating to be true.
             IsNavigating = true;
@@ -128,20 +128,20 @@ namespace HoloToolkit.Unity
                 focusedObject.SendMessage("OnSelect");
             }
 
-            // 2.b: Set NavigationPosition to be relativePosition.
-            NavigationPosition = relativePosition;
+            // 2.b: Set ManipulationPosition to be relativePosition.
+            ManipulationPosition = relativePosition;
         }
 
-        private void GestureRecognizer_NavigationCompletedEvent(InteractionSourceKind source, Vector3 relativePosition, Ray ray)
+        private void GestureRecognizer_ManipulationCompletedEvent(InteractionSourceKind source, Vector3 relativePosition, Ray ray)
         {
-            Debug.Log("Navigation Completed");
+            Debug.Log("Manipulation Completed");
             // 2.b: Set IsNavigating to be false.
             IsNavigating = false;
         }
 
-        private void GestureRecognizer_NavigationCanceledEvent(InteractionSourceKind source, Vector3 relativePosition, Ray ray)
+        private void GestureRecognizer_ManipulationCanceledEvent(InteractionSourceKind source, Vector3 relativePosition, Ray ray)
         {
-            Debug.Log("Navigation Cancelled");
+            Debug.Log("Manipulation Cancelled");
             // 2.b: Set IsNavigating to be false.
             IsNavigating = false;
         }

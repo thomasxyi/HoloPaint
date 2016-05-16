@@ -156,8 +156,8 @@ public class TexturePainter : Singleton<TexturePainter> {
             // user is drawing currently
             // draw based on saved gaze position
             pixelUV = new Vector2(
-                GestureManager.Instance.NavigationPosition.x + gazeX,
-                GestureManager.Instance.NavigationPosition.y + gazeY);
+                GestureManager.Instance.ManipulationPosition.x + gazeX,
+                GestureManager.Instance.ManipulationPosition.y + gazeY);
         }
         else if (GazeManager.Instance.Hit)
         {
