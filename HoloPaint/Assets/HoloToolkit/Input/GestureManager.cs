@@ -43,9 +43,6 @@ namespace HoloToolkit.Unity
 
             gestureRecognizer.TappedEvent += GestureRecognizer_TappedEvent;
 
-            // Start looking for gestures.
-            gestureRecognizer.StartCapturingGestures();
-
             // Register for the NavigationStartedEvent with the NavigationRecognizer_NavigationStartedEvent function.
             gestureRecognizer.NavigationStartedEvent += GestureRecognizer_NavigationStartedEvent;
             // Register for the NavigationUpdatedEvent with the NavigationRecognizer_NavigationUpdatedEvent function.
@@ -55,8 +52,8 @@ namespace HoloToolkit.Unity
             // Register for the NavigationCanceledEvent with the NavigationRecognizer_NavigationCanceledEvent function. 
             gestureRecognizer.NavigationCanceledEvent += GestureRecognizer_NavigationCanceledEvent;
 
-
-
+            // Start looking for gestures.
+            gestureRecognizer.StartCapturingGestures();
         }
 
         private void GestureRecognizer_TappedEvent(InteractionSourceKind source, int tapCount, Ray headRay)
@@ -108,6 +105,7 @@ namespace HoloToolkit.Unity
 
         private void GestureRecognizer_NavigationStartedEvent(InteractionSourceKind source, Vector3 relativePosition, Ray ray)
         {
+            Debug.Log("Navigation Started");
             // 2.b: Set IsNavigating to be true.
             IsNavigating = true;
 
@@ -136,12 +134,14 @@ namespace HoloToolkit.Unity
 
         private void GestureRecognizer_NavigationCompletedEvent(InteractionSourceKind source, Vector3 relativePosition, Ray ray)
         {
+            Debug.Log("Navigation Completed");
             // 2.b: Set IsNavigating to be false.
             IsNavigating = false;
         }
 
         private void GestureRecognizer_NavigationCanceledEvent(InteractionSourceKind source, Vector3 relativePosition, Ray ray)
         {
+            Debug.Log("Navigation Cancelled");
             // 2.b: Set IsNavigating to be false.
             IsNavigating = false;
         }

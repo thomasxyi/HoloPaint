@@ -13,8 +13,7 @@ public class AppStateManager : Singleton<AppStateManager>
     {
         Starting = 0,
         Placement,
-        Drawing,
-        AddBoard
+        Drawing
     }
 
     /// <summary>
@@ -26,28 +25,4 @@ public class AppStateManager : Singleton<AppStateManager>
     {
         CurrentAppState = AppState.Starting;
     }
-
-    void Update()
-    {
-        bool meshes = SpatialMappingManager.Instance.DrawVisualMeshes;
-        switch (CurrentAppState)
-        {
-            case AppState.Placement:
-                if (!meshes)
-                {
-                    SpatialMappingManager.Instance.DrawVisualMeshes = true;
-                }
-                break;
-            case AppState.Drawing:
-                if (meshes)
-                {
-                    SpatialMappingManager.Instance.DrawVisualMeshes = false;
-                }
-                break;
-            case AppState.AddBoard:
-
-                break;
-        }
-    }
-
 }

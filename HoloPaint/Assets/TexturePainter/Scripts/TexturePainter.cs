@@ -13,14 +13,15 @@ using UnityEngine.VR.WSA.Input;
 using HoloToolkit.Sharing;
 
 public enum Painter_BrushMode{PAINT,DECAL};
-public class TexturePainter : MonoBehaviour {
+public class TexturePainter : Singleton<TexturePainter> {
 	public GameObject brushCursor,brushContainer; //The cursor that overlaps the model and our container for the brushes painted
 	public Camera sceneCamera,canvasCam;  //The camera that looks at the model, and the camera that looks at the canvas.
 	public Sprite cursorPaint,cursorDecal; // Cursor for the differen functions 
 	public RenderTexture canvasTexture; // Render Texture that looks at our Base Texture and the painted brushes
-	public Material baseMaterial; // The material of our base texture (Were we will save the painted texture)
+    public Material SpriteLayer; // The material of our base texture (Were we will save the painted texture)
+    public Material backgroundLayer; // The material of immutable background image
 
-	Painter_BrushMode mode; //Our painter mode (Paint brushes or decals)
+    Painter_BrushMode mode; //Our painter mode (Paint brushes or decals)
 	float brushSize=1.0f; //The size of our brush
 	Color brushColor = Color.red; //The selected color
 	int brushCounter=0,MAX_BRUSH_COUNT=100; //To avoid having millions of brushes
@@ -34,6 +35,7 @@ public class TexturePainter : MonoBehaviour {
     {
         Messages.Instance.MessageHandlers[Messages.HoloPaintMessageID.Texture2D] = this.OnTexture2DReceived;
         Messages.Instance.MessageHandlers[Messages.HoloPaintMessageID.DrawSprite] = this.OnDrawSprite;
+        Messages.Instance.MessageHandlers[Messages.HoloPaintMessageID.ClearPaint] = this.OnClearPaint;
     }
     
     void OnTexture2DReceived(NetworkInMessage msg)
@@ -53,7 +55,7 @@ public class TexturePainter : MonoBehaviour {
 
         tex.LoadImage(data);
 
-        baseMaterial.mainTexture = tex;
+        SpriteLayer.mainTexture = tex;
     }
 
     void OnDrawSprite(NetworkInMessage msg)
@@ -70,6 +72,11 @@ public class TexturePainter : MonoBehaviour {
         float size = msg.ReadFloat();
 
         DoAction(uvWorldPosition, new Color(r, g, b, a), size);
+    }
+
+    void OnClearPaint(NetworkInMessage msg)
+    {
+        ClearTexture();
     }
 
     void OnSelect()
@@ -122,9 +129,10 @@ public class TexturePainter : MonoBehaviour {
         brushObj.transform.localPosition = uvWorldPosition; //The position of the brush (in the UVMap)
         brushObj.transform.localScale = Vector3.one * size;//The size of the brush
         brushCounter++; //Add to the max brushes
-		if (brushCounter >= MAX_BRUSH_COUNT) { //If we reach the max brushes available, flatten the texture and clear the brushes
-			brushCursor.SetActive (false);
-			saving=true;
+		if (brushCounter >= MAX_BRUSH_COUNT)
+        { //If we reach the max brushes available, flatten the texture and clear the brushes
+            saving = true;
+            brushCursor.SetActive (false);
 			Invoke("SaveTexture",0.1f);
 		}
 	}
@@ -140,6 +148,7 @@ public class TexturePainter : MonoBehaviour {
             // user released navigation gesture
             // reset drawing
             drawing = false;
+            GestureManager.Instance.OverrideFocusedObject = null;
         }
         
         if (drawing)
@@ -159,6 +168,7 @@ public class TexturePainter : MonoBehaviour {
                 gazeX = hit.textureCoord.x;
                 gazeY = hit.textureCoord.y;
                 drawing = true;
+                GestureManager.Instance.OverrideFocusedObject = this.gameObject;
             }
             pixelUV = new Vector2(
                 hit.textureCoord.x,
@@ -175,22 +185,35 @@ public class TexturePainter : MonoBehaviour {
         uvWorldPosition.z = 0.0f;
         return true;
 	}
+
+    void SaveTexture() {
+        SaveTexture(false);
+    }
+
 	//Sets the base material with a our canvas texture, then removes all our brushes
-	void SaveTexture(){		
+	void SaveTexture(bool clear){
 		brushCounter=0;
 		System.DateTime date = System.DateTime.Now;
-		RenderTexture.active = canvasTexture;
-		Texture2D tex = new Texture2D(canvasTexture.width, canvasTexture.height, TextureFormat.RGB24, false);		
-		tex.ReadPixels (new Rect (0, 0, canvasTexture.width, canvasTexture.height), 0, 0);
-		tex.Apply ();
-		RenderTexture.active = null;
-		baseMaterial.mainTexture =tex;	//Put the painted texture as the base
+        Texture2D tex;
+        if (clear)
+        {
+            tex = backgroundLayer.mainTexture as Texture2D;
+        }
+        else
+        {
+            RenderTexture.active = canvasTexture;
+            tex = new Texture2D(canvasTexture.width, canvasTexture.height, TextureFormat.RGB24, false);
+            tex.ReadPixels(new Rect(0, 0, canvasTexture.width, canvasTexture.height), 0, 0);
+            tex.Apply();
+            RenderTexture.active = null;
+        }
+        SpriteLayer.mainTexture = tex;	//Put the painted texture as the base
         //Messages.Instance.SendTexture2D(tex);
 		foreach (Transform child in brushContainer.transform) {//Clear brushes
 			Destroy(child.gameObject);
 		}
-		//StartCoroutine ("SaveTextureToFile"); //Do you want to save the texture? This is your method!
-		Invoke ("ShowCursor", 0.1f);
+        //StartCoroutine ("SaveTextureToFile"); //Do you want to save the texture? This is your method!
+        ShowCursor();
 	}
 	//Show again the user cursor (To avoid saving it to the texture)
 	void ShowCursor(){	
@@ -206,7 +229,8 @@ public class TexturePainter : MonoBehaviour {
 
     public void ClearTexture()
     {
-        baseMaterial.mainTexture = new Texture2D(canvasTexture.width, canvasTexture.height, TextureFormat.RGB24, false);
+        saving = true;
+        SaveTexture(true);
     }
 
 	////////////////// OPTIONAL METHODS //////////////////

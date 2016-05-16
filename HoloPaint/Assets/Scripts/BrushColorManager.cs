@@ -6,6 +6,6 @@ public class BrushColorManager : Singleton<BrushColorManager>
 {
     public void ChangeColor(Color  c)
     {
-        this.gameObject.GetComponent<SpriteRenderer>().color= c;
+        this.gameObject.GetComponent<SpriteRenderer>().color = c;
     }
 }
