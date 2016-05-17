@@ -23,6 +23,6 @@ public class AppStateManager : Singleton<AppStateManager>
 
     void Start()
     {
-        CurrentAppState = AppState.Starting;
+        CurrentAppState = AppState.Drawing;
     }
 }

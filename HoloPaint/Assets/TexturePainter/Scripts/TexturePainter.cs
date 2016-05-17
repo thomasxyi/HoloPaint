@@ -21,6 +21,10 @@ public class TexturePainter : Singleton<TexturePainter> {
     public Material SpriteLayer; // The material of our base texture (Were we will save the painted texture)
     public Material backgroundLayer; // The material of immutable background image
 
+
+    	public P3D_Brush Brush;
+
+
     Painter_BrushMode mode; //Our painter mode (Paint brushes or decals)
 	float brushSize=1.0f; //The size of our brush
 	Color brushColor = Color.red; //The selected color
@@ -31,11 +35,17 @@ public class TexturePainter : Singleton<TexturePainter> {
     float gazeX; //Record the gaze position and don't change while navigating
     float gazeY;
 
+    int paintableNum;
+
+    P3D_Paintable paintable;
+
     void Start()
     {
         Messages.Instance.MessageHandlers[Messages.HoloPaintMessageID.Texture2D] = this.OnTexture2DReceived;
         Messages.Instance.MessageHandlers[Messages.HoloPaintMessageID.DrawSprite] = this.OnDrawSprite;
         Messages.Instance.MessageHandlers[Messages.HoloPaintMessageID.ClearPaint] = this.OnClearPaint;
+        paintable = GetComponent<P3D_Paintable>();
+        //paintableNum = PaintableRegister.register(GetComponent<P3D_Paintable>());
     }
     
     void OnTexture2DReceived(NetworkInMessage msg)
@@ -70,8 +80,8 @@ public class TexturePainter : Singleton<TexturePainter> {
         float b = msg.ReadFloat();
         float a = msg.ReadFloat();
         float size = msg.ReadFloat();
-
-        DoAction(uvWorldPosition, new Color(r, g, b, a), size);
+        int pNum = msg.ReadInt32();
+        DoAction(uvWorldPosition, new Color(r, g, b, a), size, pNum);
     }
 
     void OnClearPaint(NetworkInMessage msg)
@@ -84,9 +94,12 @@ public class TexturePainter : Singleton<TexturePainter> {
         if (saving || (AppStateManager.Instance.CurrentAppState != AppStateManager.AppState.Drawing))
             return;
         Vector3 uvWorldPosition = Vector3.zero;
-        if (HitTestUVPosition(ref uvWorldPosition))
+        int pNum = 0;
+        if (HitTestUVPosition(ref uvWorldPosition, ref pNum))
         {
-            DoAction(uvWorldPosition, brushColor, brushSize);
+            Debug.Log("before do action");
+            DoAction(uvWorldPosition, brushColor, brushSize, pNum);
+            Debug.Log("finish do action");
             Messages.Instance.SendDrawSprite(uvWorldPosition, brushColor, brushSize);
         }
     }
@@ -100,11 +113,12 @@ public class TexturePainter : Singleton<TexturePainter> {
             brushSize = BrushManager.Instance.CurrentBrushSize;
             brushCursor.transform.localScale = Vector3.one * brushSize;
         }
-        Vector3 uvWorldPosition = Vector3.zero;
-        if (HitTestUVPosition(ref uvWorldPosition) && !saving && (AppStateManager.Instance.CurrentAppState == AppStateManager.AppState.Drawing))
+        Vector3 pixelUV = Vector3.zero;
+        int pNum = 0;
+        if (HitTestUVPosition(ref pixelUV, ref pNum) && !saving && (AppStateManager.Instance.CurrentAppState == AppStateManager.AppState.Drawing))
         {
             brushCursor.SetActive(true);
-            brushCursor.transform.position = uvWorldPosition + brushContainer.transform.position;
+            brushCursor.transform.position = pixelUV + brushContainer.transform.position;
         }
         else {
             brushCursor.SetActive(false);
@@ -112,36 +126,53 @@ public class TexturePainter : Singleton<TexturePainter> {
     }
 
     //The main action, instantiates a brush or decal entity at the clicked position on the UV map
-    void DoAction(Vector3 uvWorldPosition, Color bColor, float size)
+    void DoAction(Vector3 uvWorldPosition, Color bColor, float size, int paintableNum)
     {
-        GameObject brushObj;
-        if (mode == Painter_BrushMode.PAINT)
+        //      GameObject brushObj;
+        //      if (mode == Painter_BrushMode.PAINT)
+        //      {
+        //          brushObj = (GameObject)Instantiate(Resources.Load("TexturePainter-Instances/SolidBrushEntity")); //Paint a brush
+        //      }
+        //      else
+        //      {
+        //          brushObj = (GameObject)Instantiate(Resources.Load("TexturePainter-Instances/DecalEntity")); //Paint a decal
+        //      }
+        //      bColor.a = size * 2.0f; // Brushes have alpha to have a merging effect when painted over.
+        //      brushObj.GetComponent<SpriteRenderer>().color = bColor; //Set the brush color
+        //      brushObj.transform.parent = brushContainer.transform; //Add the brush to our container to be wiped later
+        //      brushObj.transform.localPosition = uvWorldPosition; //The position of the brush (in the UVMap)
+        //      brushObj.transform.localScale = Vector3.one * size;//The size of the brush
+        //      brushCounter++; //Add to the max brushes
+        //if (brushCounter >= MAX_BRUSH_COUNT)
+        //      { //If we reach the max brushes available, flatten the texture and clear the brushes
+        //          saving = true;
+        //          brushCursor.SetActive (false);
+        //	Invoke("SaveTexture",0.1f);
+        //}
+
+        Debug.Log("Start doAction method");
+        // See if the object the raycast hit is paintable
+        //var paintable = PaintableRegister.getPaintable(paintableNum);
+
+        if (paintable != null)
         {
-            brushObj = (GameObject)Instantiate(Resources.Load("TexturePainter-Instances/SolidBrushEntity")); //Paint a brush
+            Debug.Log("start if method");
+            // Get painter for this paintable
+            var painter = paintable.GetPainter();
+
+            // Change painter's current brush
+            painter.SetBrush(Brush);
+
+            // Paint at the hit coordinate
+            painter.Paint(new Vector2(uvWorldPosition.x, uvWorldPosition.y));
+            Debug.Log("paint on the uvworld position");
         }
-        else
-        {
-            brushObj = (GameObject)Instantiate(Resources.Load("TexturePainter-Instances/DecalEntity")); //Paint a decal
-        }
-        bColor.a = size * 2.0f; // Brushes have alpha to have a merging effect when painted over.
-        brushObj.GetComponent<SpriteRenderer>().color = bColor; //Set the brush color
-        brushObj.transform.parent = brushContainer.transform; //Add the brush to our container to be wiped later
-        brushObj.transform.localPosition = uvWorldPosition; //The position of the brush (in the UVMap)
-        brushObj.transform.localScale = Vector3.one * size;//The size of the brush
-        brushCounter++; //Add to the max brushes
-		if (brushCounter >= MAX_BRUSH_COUNT)
-        { //If we reach the max brushes available, flatten the texture and clear the brushes
-            saving = true;
-            brushCursor.SetActive (false);
-			Invoke("SaveTexture",0.1f);
-		}
-	}
+        Debug.Log("Finish the DoAction Method");
+    }
 
 	//Returns the position on the texuremap according to a hit in the mesh collider
-	bool HitTestUVPosition(ref Vector3 uvWorldPosition){
+	bool HitTestUVPosition(ref Vector3 pixelUV, ref int paintableNum){
 		RaycastHit hit = GazeManager.Instance.HitInfo;
-
-        Vector2 pixelUV;
 
         if (!GestureManager.Instance.IsNavigating)
         {
@@ -173,6 +204,12 @@ public class TexturePainter : Singleton<TexturePainter> {
             pixelUV = new Vector2(
                 hit.textureCoord.x,
                 hit.textureCoord.y);
+
+            //P3D_Paintable hitPaintable = hit.collider.GetComponent<P3D_Paintable>();
+            //if (hitPaintable != null)
+            //{
+            //    paintableNum = PaintableRegister.getNum(hitPaintable);
+            //}
         }
         else
         {
@@ -180,9 +217,6 @@ public class TexturePainter : Singleton<TexturePainter> {
             return false;
         }
 
-        uvWorldPosition.x = pixelUV.x - canvasCam.orthographicSize;//To center the UV on X
-        uvWorldPosition.y = pixelUV.y - canvasCam.orthographicSize;//To center the UV on Y
-        uvWorldPosition.z = 0.0f;
         return true;
 	}
 

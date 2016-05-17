@@ -5,7 +5,10 @@ public class P3D_Paintable : MonoBehaviour
 {
 	public static List<P3D_Paintable> AllPaintables = new List<P3D_Paintable>();
 
-	[Tooltip("The material index we want to paint")]
+    [Tooltip("ID of the paintable object")]
+    public int ID = 10;
+
+    [Tooltip("The material index we want to paint")]
 	public int MaterialIndex;
 
 	[Tooltip("The texture we want to paint")]
