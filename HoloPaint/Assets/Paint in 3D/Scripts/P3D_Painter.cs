@@ -165,7 +165,7 @@ public class P3D_Painter
 
 			if (texture != null)
 			{
-				texture.Apply();
+				texture.Apply(true);
 			}
 		}
 	}
