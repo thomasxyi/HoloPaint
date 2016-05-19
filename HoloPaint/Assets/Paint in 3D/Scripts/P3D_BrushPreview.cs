@@ -18,7 +18,7 @@ public class P3D_BrushPreview : MonoBehaviour
 	private Material[] materials = new Material[1];
 	
 	// Call this if you want to show the brush preview yourself
-	public static void Show(Mesh mesh, int submeshIndex, Transform transform, float opacity, P3D_Matrix paintMatrix, Vector2 canvasResolution, Texture2D shape, Vector2 tiling, Vector2 offset)
+	public static void Show(Mesh mesh, int submeshIndex, Transform transform, float opacity, P3D_Matrix paintMatrix, Vector2 canvasResolution, Texture2D shape, Color color, Vector2 tiling, Vector2 offset)
 	{
 		for (var i = AllPreviews.Count - 1; i >= 0; i--)
 		{
@@ -26,14 +26,14 @@ public class P3D_BrushPreview : MonoBehaviour
 			
 			if (preview != null && preview.age > 0)
 			{
-				preview.UpdateShow(mesh, submeshIndex, transform, opacity, paintMatrix, canvasResolution, shape, tiling, offset); return;
+				preview.UpdateShow(mesh, submeshIndex, transform, opacity, paintMatrix, canvasResolution, shape, color, tiling, offset); return;
 			}
 		}
 		
 		var newGameObject = new GameObject("P3D_BrushPreview");             newGameObject.hideFlags = HideFlags.HideAndDontSave;
 		var newPreview    = newGameObject.AddComponent<P3D_BrushPreview>(); newPreview.hideFlags    = HideFlags.HideAndDontSave;
 		
-		newPreview.UpdateShow(mesh, submeshIndex, transform, opacity, paintMatrix, canvasResolution, shape, tiling, offset);
+		newPreview.UpdateShow(mesh, submeshIndex, transform, opacity, paintMatrix, canvasResolution, shape, color, tiling, offset);
 	}
 	
 	public static void Mark()
@@ -88,7 +88,7 @@ public class P3D_BrushPreview : MonoBehaviour
 		}
 	}
 	
-	private void UpdateShow(Mesh mesh, int submeshIndex, Transform target, float opacity, P3D_Matrix paintMatrix, Vector2 canvasResolution, Texture2D shape, Vector2 tiling, Vector2 offset)
+	private void UpdateShow(Mesh mesh, int submeshIndex, Transform target, float opacity, P3D_Matrix paintMatrix, Vector2 canvasResolution, Texture2D shape, Color color, Vector2 tiling, Vector2 offset)
 	{
 		if (target != null)
 		{
@@ -107,7 +107,7 @@ public class P3D_BrushPreview : MonoBehaviour
 			material.SetVector("_CanvasResolution", canvasResolution);
 			material.SetVector("_Tiling", tiling);
 			material.SetVector("_Offset", offset);
-			material.SetColor("_Color", new Color(1.0f, 1.0f, 1.0f, opacity));
+			material.SetColor("_Color", color);
 			material.SetTexture("_Shape", shape);
 			
 			if (materials.Length != submeshIndex + 1)

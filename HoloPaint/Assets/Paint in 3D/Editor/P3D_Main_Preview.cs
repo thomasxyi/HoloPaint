@@ -102,7 +102,7 @@ public partial class P3D_Main
 			var ray           = HandleUtility.GUIPointToWorldRay(mousePosition);
 			var startPosition = ray.origin + ray.direction * camera.nearClipPlane;
 			var endPosition   = ray.origin + ray.direction * camera.farClipPlane;
-			var operation     = P3D_PaintOperation.Preview(lockedMesh, currentMaterialIndex, lockedGameObject.transform, currentBrush.Shape, CurrentTiling, CurrentOffset);
+			var operation     = P3D_PaintOperation.Preview(lockedMesh, currentMaterialIndex, lockedGameObject.transform, currentBrush.Shape, currentBrush.Color, CurrentTiling, CurrentOffset);
 
 			painter.SetMesh(lockedGameObject.transform, lockedMesh, currentMaterialIndex);
 
@@ -119,7 +119,7 @@ public partial class P3D_Main
 			if (passThrough == true)// && currentTool != ToolType.Fill)
 			{
 				painter.PaintBetweenAll(startPosition, endPosition);
-			}
+            }
 			else
 			{
 				painter.PaintBetweenNearest(startPosition, endPosition);
