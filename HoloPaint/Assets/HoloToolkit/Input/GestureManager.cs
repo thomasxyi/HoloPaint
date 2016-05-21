@@ -136,6 +136,7 @@ namespace HoloToolkit.Unity
         {
             Debug.Log("Manipulation Completed");
             // 2.b: Set IsNavigating to be false.
+
             IsNavigating = false;
         }
 
@@ -143,6 +144,7 @@ namespace HoloToolkit.Unity
         {
             Debug.Log("Manipulation Cancelled");
             // 2.b: Set IsNavigating to be false.
+
             IsNavigating = false;
         }
     }

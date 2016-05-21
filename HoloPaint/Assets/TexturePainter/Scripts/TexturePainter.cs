@@ -15,13 +15,10 @@ using HoloToolkit.Sharing;
 public enum Painter_BrushMode { PAINT, DECAL };
 public class TexturePainter : Singleton<TexturePainter>
 {
-    Painter_BrushMode mode; //Our painter mode (Paint brushes or decals)
-
-    bool drawing = false;
-    float gazeX; //Record the gaze position and don't change while navigating
-    float gazeY;
-    Vector3 startGazeHit; //Record the original gaze hit
-    Vector3 prevPos;
+    P3D_Paintable paintable;
+    bool navigating = false;
+    Vector3 lastDrawn;
+    Vector3 navigStart;
 
     void Start()
     {
@@ -80,19 +77,14 @@ public class TexturePainter : Singleton<TexturePainter>
             return;
         Vector3 startPos = Vector3.zero;
         Vector3 endPos = Vector3.zero;
-        GameObject hologram = null;
-        if (HitTestPosition(ref startPos, ref endPos, ref hologram))
+        if (HitTestPosition(ref startPos, ref endPos))
         {
-            DoAction(startPos, endPos, BrushManager.Instance.Brush, hologram.GetComponent<P3D_Paintable>());
+            DoAction(startPos, endPos, BrushManager.Instance.Brush);
         }
     }
 
-    void Update()
-    {
-    }
-
     //The main action, instantiates a brush or decal entity at the clicked position on the UV map
-    void DoAction(Vector3 startPos, Vector3 endPos, P3D_Brush brush, P3D_Paintable paintable)
+    void DoAction(Vector3 startPos, Vector3 endPos, P3D_Brush brush)
     {
         // Get painter for this paintable
         var painter = paintable.GetPainter();
@@ -101,38 +93,36 @@ public class TexturePainter : Singleton<TexturePainter>
         painter.SetBrush(brush);
 
         // Paint at the hit coordinate
-        painter.PaintNearest(endPos, 1f);
+        // TODO PaintBetweenAll not working, will only draw 2 points
+        painter.PaintNearest(endPos, 1.0f);
+    }
 
-        // Find the ray for this screen position
-        //var stepCount = Vector2.Distance(startPos, endPos) / StepSize + 1;
-
-        //for (var i = 0; i < stepCount; i++)
-        //{
-        //    var subPos = Vector3.Lerp(startPos, endPos, i / stepCount);
-        //}
+    void Update() {
+        if (!GestureManager.Instance.IsNavigating)
+        {
+            navigStart = GazeManager.Instance.HitInfo.point;
+            navigating = false;
+        }
     }
 
     //Returns the position on the texuremap according to a hit in the mesh collider
-    bool HitTestPosition(ref Vector3 startPos, ref Vector3 endPos, ref GameObject hologram)
+    bool HitTestPosition(ref Vector3 startPos, ref Vector3 endPos)
     {
-        RaycastHit hit = GazeManager.Instance.HitInfo;
-
         if (!GestureManager.Instance.IsNavigating)
         {
             // user released navigation gesture
             // reset drawing
-            drawing = false;
+            navigating = false;
             GestureManager.Instance.OverrideFocusedObject = null;
         }
 
-        if (drawing)
+        if (navigating)
         {
             // user is drawing currently
             // draw based on saved gaze position
-            startPos = prevPos;
-            endPos = startGazeHit + GestureManager.Instance.ManipulationPosition;
-            prevPos = endPos;
-            hologram = hit.collider.gameObject;
+            //startPos = lastDrawn;
+            endPos = navigStart + GestureManager.Instance.ManipulationPosition * 2.0f;
+            //lastDrawn = endPos;
         }
         else if (GazeManager.Instance.Hit)
         {
@@ -140,13 +130,14 @@ public class TexturePainter : Singleton<TexturePainter>
             {
                 // first drawing stroke by user
                 // save current gaze focus
-                startGazeHit = hit.point;
-                prevPos = hit.point;
-                drawing = true;
+                navigating = true;
                 GestureManager.Instance.OverrideFocusedObject = this.gameObject;
             }
-            startPos = hit.point;
+            RaycastHit hit = GazeManager.Instance.HitInfo;
+            paintable = hit.collider.gameObject.GetComponent<P3D_Paintable>();
+            //startPos = hit.point;
             endPos = hit.point;
+            //lastDrawn = hit.point;
         }
         else
         {
@@ -155,66 +146,6 @@ public class TexturePainter : Singleton<TexturePainter>
         }
 
         return true;
-    }
-
-    //Returns the position on the texuremap according to a hit in the mesh collider
-    bool HitTestUVPosition(ref Vector3 pixelUV, ref int paintableNum, ref Vector3 uvEndPosition)
-    {
-        RaycastHit hit = GazeManager.Instance.HitInfo;
-
-        if (!GestureManager.Instance.IsNavigating)
-        {
-            // user released navigation gesture
-            // reset drawing
-            drawing = false;
-            GestureManager.Instance.OverrideFocusedObject = null;
-        }
-
-        if (drawing)
-        {
-            // user is drawing currently
-            // draw based on saved gaze position
-            pixelUV = new Vector2(gazeX, gazeY);
-
-            uvEndPosition = new Vector2(
-                GestureManager.Instance.ManipulationPosition.x + gazeX,
-                GestureManager.Instance.ManipulationPosition.y + gazeY);
-        }
-        else if (GazeManager.Instance.Hit)
-        {
-            if (GestureManager.Instance.IsNavigating)
-            {
-                // first drawing stroke by user
-                // save current gaze focus
-                gazeX = hit.textureCoord.x;
-                gazeY = hit.textureCoord.y;
-                drawing = true;
-                GestureManager.Instance.OverrideFocusedObject = this.gameObject;
-            }
-            pixelUV = new Vector2(
-                hit.textureCoord.x,
-                hit.textureCoord.y);
-        }
-        else
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    ////////////////// PUBLIC METHODS //////////////////
-
-    public void SetBrushMode(Painter_BrushMode brushMode)
-    { //Sets if we are painting or placing decals
-       // mode = brushMode;
-        //brushCursor.GetComponent<SpriteRenderer>().sprite = brushMode == Painter_BrushMode.PAINT ? cursorPaint : cursorDecal;
-    }
-
-    public void ClearTexture()
-    {
-       // saving = true;
-        //SaveTexture(true);
     }
 
 }
