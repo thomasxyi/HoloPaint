@@ -25,7 +25,6 @@ public class TexturePainter : Singleton<TexturePainter>
         Messages.Instance.MessageHandlers[Messages.HoloPaintMessageID.Texture2D] = this.OnTexture2DReceived;
         Messages.Instance.MessageHandlers[Messages.HoloPaintMessageID.DrawSprite] = this.OnDrawSprite;
         Messages.Instance.MessageHandlers[Messages.HoloPaintMessageID.ClearPaint] = this.OnClearPaint;
-        //HologramsManager.Instance.instantiateHologram("Whale");
     }
 
     void OnTexture2DReceived(NetworkInMessage msg)
