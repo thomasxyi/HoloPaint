@@ -30,7 +30,7 @@ namespace HoloToolkit.Unity
         // The universal tap gesture recogniszer
         public GestureRecognizer gestureRecognizer { get; private set; }
 
-        public bool IsNavigating { get; private set; }
+        public bool IsManipulating { get; private set; }
 
         public Vector3 ManipulationPosition { get; private set; }
 
@@ -58,9 +58,10 @@ namespace HoloToolkit.Unity
 
         private void GestureRecognizer_TappedEvent(InteractionSourceKind source, int tapCount, Ray headRay)
         {
-            if (focusedObject != null)
+            GameObject obj = getFocusedObject();
+            if (obj != null)
             {
-                focusedObject.SendMessage("OnSelect");
+                obj.SendMessage("OnSelect");
             }
         }
 
@@ -107,11 +108,11 @@ namespace HoloToolkit.Unity
         {
             Debug.Log("Manipulation Started");
             // 2.b: Set IsNavigating to be true.
-            IsNavigating = true;
-
-            if (focusedObject != null)
+            IsManipulating = true;
+            GameObject obj = getFocusedObject();
+            if (obj != null)
             {
-                focusedObject.SendMessage("OnSelect");
+                obj.SendMessage("OnManipulation");
             }
 
             // 2.b: Set ManipulationPosition to be relativePosition.
@@ -121,11 +122,12 @@ namespace HoloToolkit.Unity
         private void GestureRecognizer_ManipulationUpdatedEvent(InteractionSourceKind source, Vector3 relativePosition, Ray ray)
         {
             // 2.b: Set IsNavigating to be true.
-            IsNavigating = true;
+            IsManipulating = true;
 
-            if (focusedObject != null)
+            GameObject obj = getFocusedObject();
+            if (obj != null)
             {
-                focusedObject.SendMessage("OnSelect");
+                obj.SendMessage("OnManipulation");
             }
 
             // 2.b: Set ManipulationPosition to be relativePosition.
@@ -137,7 +139,13 @@ namespace HoloToolkit.Unity
             Debug.Log("Manipulation Completed");
             // 2.b: Set IsNavigating to be false.
 
-            IsNavigating = false;
+            IsManipulating = false;
+
+            GameObject obj = getFocusedObject();
+            if (obj != null)
+            {
+                obj.SendMessage("OnManipulationEnd");
+            }
         }
 
         private void GestureRecognizer_ManipulationCanceledEvent(InteractionSourceKind source, Vector3 relativePosition, Ray ray)
@@ -145,7 +153,20 @@ namespace HoloToolkit.Unity
             Debug.Log("Manipulation Cancelled");
             // 2.b: Set IsNavigating to be false.
 
-            IsNavigating = false;
+            IsManipulating = false;
+
+            GameObject obj = getFocusedObject();
+            if (obj != null)
+            {
+                obj.SendMessage("OnManipulationEnd");
+            }
+        }
+
+        private GameObject getFocusedObject() {
+            if (OverrideFocusedObject != null) {
+                return OverrideFocusedObject;
+            }
+            return focusedObject;
         }
     }
 }

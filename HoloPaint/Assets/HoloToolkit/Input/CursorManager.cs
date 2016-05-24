@@ -54,7 +54,7 @@ public class CursorManager : Singleton<CursorManager>
         
 
         // Place the cursor at the calculated position.
-        if (GestureManager.Instance.IsNavigating)
+        if (GestureManager.Instance.IsManipulating)
         {
             CursorOnHolograms.SetActive(false);
             CursorOffHolograms.SetActive(false);

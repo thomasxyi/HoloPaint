@@ -137,7 +137,7 @@ public class Messages : Singleton<Messages>
         }
     }
 
-    public void SendDrawSprite(Vector3 uvWorldPosition, Color brushColor, float brushSize)
+    public void SendDrawSprite(Vector3 uvWorldPosition)
     {
         // If we are connected to a session, broadcast our head info
         if (this.serverConnection != null && this.serverConnection.IsConnected())
@@ -146,11 +146,6 @@ public class Messages : Singleton<Messages>
             NetworkOutMessage msg = CreateMessage((byte)HoloPaintMessageID.DrawSprite);
 
             AppendVector3(msg, uvWorldPosition);
-            msg.Write(brushColor.r);
-            msg.Write(brushColor.g);
-            msg.Write(brushColor.b);
-            msg.Write(brushColor.a);
-            msg.Write(brushSize);
 
             // Send the message as a broadcast, which will cause the server to forward it to all other users in the session.  
             this.serverConnection.Broadcast(

@@ -13,6 +13,7 @@ public class AppStateManager : Singleton<AppStateManager>
     {
         Starting = 0,
         Placement,
+        Rotation,
         Drawing
     }
 

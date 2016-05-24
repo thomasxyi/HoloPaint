@@ -70,6 +70,11 @@ public class TexturePainter : Singleton<TexturePainter>
         //ClearTexture();
     }
 
+    void OnManipulation()
+    {
+        OnSelect();
+    }
+
     void OnSelect()
     {
         if (AppStateManager.Instance.CurrentAppState != AppStateManager.AppState.Drawing)
@@ -97,7 +102,7 @@ public class TexturePainter : Singleton<TexturePainter>
     }
 
     void Update() {
-        if (!GestureManager.Instance.IsNavigating)
+        if (!GestureManager.Instance.IsManipulating)
         {
             navigStart = GazeManager.Instance.HitInfo.point;
             navigating = false;
@@ -107,7 +112,7 @@ public class TexturePainter : Singleton<TexturePainter>
     //Returns the position on the texuremap according to a hit in the mesh collider
     bool HitTestPosition(ref Vector3 startPos, ref Vector3 endPos)
     {
-        if (!GestureManager.Instance.IsNavigating)
+        if (!GestureManager.Instance.IsManipulating)
         {
             // user released navigation gesture
             // reset drawing
@@ -125,7 +130,7 @@ public class TexturePainter : Singleton<TexturePainter>
         }
         else if (GazeManager.Instance.Hit)
         {
-            if (GestureManager.Instance.IsNavigating)
+            if (GestureManager.Instance.IsManipulating)
             {
                 // first drawing stroke by user
                 // save current gaze focus
