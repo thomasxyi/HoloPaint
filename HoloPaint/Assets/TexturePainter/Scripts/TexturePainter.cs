@@ -1,12 +1,8 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
-using System.Collections;
 using HoloToolkit.Unity;
-using UnityEngine.VR.WSA.Input;
-using HoloToolkit.Sharing;
 using System;
 
-public class TexturePainter : Singleton<TexturePainter>
+public class TexturePainter : MonoBehaviour
 {
     public Guid uid { get; set; }
     bool navigating = false;
@@ -20,18 +16,6 @@ public class TexturePainter : Singleton<TexturePainter>
     void OnManipulation()
     {
         OnSelect();
-    }
-
-    void OnSelect()
-    {
-        if (AppStateManager.Instance.CurrentAppState != AppStateManager.AppState.Drawing)
-            return;
-        Vector3 startPos = Vector3.zero;
-        Vector3 endPos = Vector3.zero;
-        if (HitTestPosition(ref startPos, ref endPos))
-        {
-            PaintWorldCoordinates(startPos, endPos, BrushManager.Instance.GetLocalBrush());
-        }
     }
 
     //The main action, instantiates a brush or decal entity at the clicked position on the UV map
@@ -82,24 +66,29 @@ public class TexturePainter : Singleton<TexturePainter>
     // Update is called once per frame
     void Update()
     {
-        if (!GestureManager.Instance.IsManipulating)
+        if (AppStateManager.Instance.CurrentAppState == AppStateManager.AppState.Drawing && !GestureManager.Instance.IsManipulating)
         {
             navigStart = GazeManager.Instance.HitInfo.point;
             navigating = false;
+            GestureManager.Instance.OverrideFocusedObject = null;
+        }
+    }
+
+    void OnSelect()
+    {
+        if (AppStateManager.Instance.CurrentAppState != AppStateManager.AppState.Drawing)
+            return;
+        Vector3 startPos = Vector3.zero;
+        Vector3 endPos = Vector3.zero;
+        if (HitTestPosition(ref startPos, ref endPos))
+        {
+            PaintWorldCoordinates(startPos, endPos, BrushManager.Instance.GetLocalBrush());
         }
     }
 
     //Returns the position on the texuremap according to a hit in the mesh collider
     public bool HitTestPosition(ref Vector3 startPos, ref Vector3 endPos)
     {
-        if (!GestureManager.Instance.IsManipulating)
-        {
-            // user released navigation gesture
-            // reset drawing
-            navigating = false;
-            GestureManager.Instance.OverrideFocusedObject = null;
-        }
-
         if (navigating)
         {
             // user is drawing currently
