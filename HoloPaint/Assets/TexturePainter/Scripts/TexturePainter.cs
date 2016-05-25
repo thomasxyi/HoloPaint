@@ -106,6 +106,7 @@ public class TexturePainter : Singleton<TexturePainter>
             // draw based on saved gaze position
             //startPos = lastDrawn;
             endPos = navigStart + GestureManager.Instance.ManipulationPosition * 2.0f;
+
             //lastDrawn = endPos;
         }
         else if (GazeManager.Instance.Hit)
