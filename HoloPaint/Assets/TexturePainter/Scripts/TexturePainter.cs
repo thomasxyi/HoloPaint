@@ -30,8 +30,34 @@ public class TexturePainter : MonoBehaviour
         painter.ModelGUID = this.uid;
 
         // Paint at the hit coordinate
-        // TODO PaintBetweenAll not working, will only draw 2 points
-        painter.PaintNearest(endPos, 1.0f);
+        if (startPos == endPos)
+        {
+            var hit = default(RaycastHit);
+            Vector3 origin = Camera.main.transform.position;
+
+            // Raycast into the 3D scene
+            if (Physics.Raycast(origin, endPos - origin, out hit, 10.0f))
+            {
+                painter.Paint(hit.textureCoord);
+            }
+        }
+        else
+        {
+            var stepCount = Vector3.Distance(startPos, endPos) / BrushManager.Instance.GetStepSize() + 1;
+            for (var i = 0; i < stepCount; i++)
+            {
+                var subPos = Vector3.Lerp(startPos, endPos, i / stepCount);
+
+                var hit = default(RaycastHit);
+                Vector3 origin = Camera.main.transform.position;
+
+                // Raycast into the 3D scene
+                if (Physics.Raycast(origin, endPos - origin, out hit, 10.0f))
+                {
+                    painter.Paint(hit.textureCoord);
+                }
+            }
+        }
 
         painter.ModelGUID = Guid.Empty; // makes sure there's no more synchronization
     }
@@ -93,10 +119,8 @@ public class TexturePainter : MonoBehaviour
         {
             // user is drawing currently
             // draw based on saved gaze position
-            //startPos = lastDrawn;
+            startPos = lastDrawn;
             endPos = navigStart + GestureManager.Instance.ManipulationPosition * 2.0f;
-
-            //lastDrawn = endPos;
         }
         else if (GazeManager.Instance.Hit)
         {
@@ -108,9 +132,9 @@ public class TexturePainter : MonoBehaviour
                 GestureManager.Instance.OverrideFocusedObject = this.gameObject;
             }
             RaycastHit hit = GazeManager.Instance.HitInfo;
-            //startPos = hit.point;
+            startPos = hit.point;
             endPos = hit.point;
-            //lastDrawn = hit.point;
+            lastDrawn = hit.point;
         }
         else
         {
