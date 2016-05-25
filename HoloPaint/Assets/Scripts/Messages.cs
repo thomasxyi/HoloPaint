@@ -17,9 +17,10 @@ public class Messages : Singleton<Messages>
     public enum HoloPaintMessageID : byte
     {
         Texture2D = MessageID.UserMessageIDStart,
-        DrawSprite,
+        PaintUV,
         ClearPaint,
         InstantiateModel,
+        UpdateBrush,
         Max
     }
 
@@ -60,6 +61,7 @@ public class Messages : Singleton<Messages>
     void Start()
     {
         InitializeMessageHandlers();
+        BrushManager.Instance.InitializeLocalBrush();
     }
 
     void InitializeMessageHandlers()
@@ -122,23 +124,6 @@ public class Messages : Singleton<Messages>
         }
     }
 
-    public void SendClearPaint()
-    {
-        // If we are connected to a session, broadcast our head info
-        if (this.serverConnection != null && this.serverConnection.IsConnected())
-        {
-            // Create an outgoing network message to contain all the info we want to send
-            NetworkOutMessage msg = CreateMessage((byte)HoloPaintMessageID.ClearPaint);
-
-            // Send the message as a broadcast, which will cause the server to forward it to all other users in the session.  
-            this.serverConnection.Broadcast(
-                msg,
-                MessagePriority.Immediate,
-                MessageReliability.ReliableOrdered,
-                MessageChannel.Avatar);
-        }
-    }
-
     public void SendInstantiateModel(string name, Guid uid)
     {
         // If we are connected to a session
@@ -159,15 +144,44 @@ public class Messages : Singleton<Messages>
         }
     }
 
-    public void SendDrawSprite(Vector3 uvWorldPosition)
+    public void SendPaintUV(Vector3 uv, Guid uid)
     {
         // If we are connected to a session, broadcast our head info
         if (this.serverConnection != null && this.serverConnection.IsConnected())
         {
             // Create an outgoing network message to contain all the info we want to send
-            NetworkOutMessage msg = CreateMessage((byte)HoloPaintMessageID.DrawSprite);
+            NetworkOutMessage msg = CreateMessage((byte)HoloPaintMessageID.PaintUV);
 
-            AppendVector3(msg, uvWorldPosition);
+            msg.Write(uid.ToString());
+
+            AppendVector3(msg, uv);
+
+            // Send the message as a broadcast, which will cause the server to forward it to all other users in the session.  
+            this.serverConnection.Broadcast(
+                msg,
+                MessagePriority.Immediate,
+                MessageReliability.ReliableOrdered,
+                MessageChannel.Mouse);
+        }
+    }
+
+    public void SendBrush(P3D_Brush localBrush)
+    {
+        // If we are connected to a session, broadcast our head info
+        if (this.serverConnection != null && this.serverConnection.IsConnected())
+        {
+            // Create an outgoing network message to contain all the info we want to send
+            NetworkOutMessage msg = CreateMessage((byte)HoloPaintMessageID.PaintUV);
+
+            // Color
+            msg.Write(localBrush.Color.r);
+            msg.Write(localBrush.Color.g);
+            msg.Write(localBrush.Color.b);
+            msg.Write(localBrush.Color.a);
+
+            // Size
+            msg.Write(localBrush.Size.x);
+            msg.Write(localBrush.Size.y);
 
             // Send the message as a broadcast, which will cause the server to forward it to all other users in the session.  
             this.serverConnection.Broadcast(
@@ -175,6 +189,25 @@ public class Messages : Singleton<Messages>
                 MessagePriority.Immediate,
                 MessageReliability.ReliableOrdered,
                 MessageChannel.Avatar);
+        }
+    }
+
+    public void SendClearPaint(Guid uid)
+    {
+        // If we are connected to a session, broadcast our head info
+        if (this.serverConnection != null && this.serverConnection.IsConnected())
+        {
+            // Create an outgoing network message to contain all the info we want to send
+            NetworkOutMessage msg = CreateMessage((byte)HoloPaintMessageID.ClearPaint);
+
+            msg.Write(uid.ToString());
+
+            // Send the message as a broadcast, which will cause the server to forward it to all other users in the session.  
+            this.serverConnection.Broadcast(
+                msg,
+                MessagePriority.Immediate,
+                MessageReliability.ReliableOrdered,
+                MessageChannel.Default);
         }
     }
 

@@ -5,8 +5,9 @@ public class ColorButton : MonoBehaviour
 {
     public void OnSelect()
     {
-        BrushManager.Instance.CurrentBrushColor = this.gameObject.GetComponent<Image>().color;
-        BrushColorManager.Instance.ChangeColor(this.gameObject.GetComponent<Image>().color);
+        Color c = Color.cyan; //this.gameObject.GetComponent<Image>().color;
+        BrushManager.Instance.SetColor(c);
+        BrushColorManager.Instance.ChangeColor(c);
     }
 }
 

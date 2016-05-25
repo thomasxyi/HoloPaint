@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 // This is the main painting class, it stores a tree of mesh data (for fast access), and provides methods to raycast and paint into the data
 //[System.Serializable]
@@ -65,6 +66,8 @@ public class P3D_Painter
 			return tree != null && tree.IsReady == true && transform != null;
 		}
 	}
+
+    public Guid ModelGUID { get; set; }
 
 	// This allows you to change which mesh is currently used when doing painting, via GameObject
 	// NOTE: If you're using MeshCollider raycasting then you don't need to call this, as you can pass the hit UV coordinates directly to the Paint method
@@ -190,6 +193,11 @@ public class P3D_Painter
 		{
 			Paint(P3D_Helper.CreateMatrix(xy, Size, Angle));
 		}
+
+        if (ModelGUID != Guid.Empty)
+        {
+            Messages.Instance.SendPaintUV(uv, ModelGUID);
+        }
 	}
 
 	// This converts a 0..1 UV coordinate to a pixel coordination for the current texture

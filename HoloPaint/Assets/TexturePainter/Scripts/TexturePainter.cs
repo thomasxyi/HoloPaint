@@ -15,52 +15,6 @@ public class TexturePainter : Singleton<TexturePainter>
 
     void Start()
     {
-        Messages.Instance.MessageHandlers[Messages.HoloPaintMessageID.Texture2D] = this.OnTexture2DReceived;
-        Messages.Instance.MessageHandlers[Messages.HoloPaintMessageID.DrawSprite] = this.OnDrawSprite;
-        Messages.Instance.MessageHandlers[Messages.HoloPaintMessageID.ClearPaint] = this.OnClearPaint;
-    }
-
-    void OnTexture2DReceived(NetworkInMessage msg)
-    {
-        // We read the user ID but we don't use it here.
-        msg.ReadInt64();
-
-        int w = msg.ReadInt32();
-        int h = msg.ReadInt32();
-
-        uint len = (uint)msg.ReadInt32();
-        byte[] data = new byte[len];
-
-        msg.ReadArray(data, len);
-
-        Texture2D tex = new Texture2D(w, h);
-
-        tex.LoadImage(data);
-
-        //SpriteLayer.mainTexture = tex;
-    }
-
-    void OnDrawSprite(NetworkInMessage msg)
-    {
-        // We read the user ID but we don't use it here.
-        msg.ReadInt64();
-
-        Vector3 uvWorldPosition = Messages.Instance.ReadVector3(msg);
-
-        float r = msg.ReadFloat();
-        float g = msg.ReadFloat();
-        float b = msg.ReadFloat();
-        float a = msg.ReadFloat();
-        float size = msg.ReadFloat();
-        int pNum = msg.ReadInt32();
-
-        Vector3 uvEndPosition = Messages.Instance.ReadVector3(msg);
-        //DoAction(uvWorldPosition, new Color(r, g, b, a), size, pNum, uvEndPosition);
-    }
-
-    void OnClearPaint(NetworkInMessage msg)
-    {
-        //ClearTexture();
     }
 
     void OnManipulation()
@@ -76,7 +30,7 @@ public class TexturePainter : Singleton<TexturePainter>
         Vector3 endPos = Vector3.zero;
         if (HitTestPosition(ref startPos, ref endPos))
         {
-            PaintWorldCoordinates(startPos, endPos, BrushManager.Instance.Brush);
+            PaintWorldCoordinates(startPos, endPos, BrushManager.Instance.GetLocalBrush());
         }
     }
 
@@ -89,9 +43,40 @@ public class TexturePainter : Singleton<TexturePainter>
         // Change painter's current brush
         painter.SetBrush(brush);
 
+        painter.ModelGUID = this.uid;
+
         // Paint at the hit coordinate
         // TODO PaintBetweenAll not working, will only draw 2 points
         painter.PaintNearest(endPos, 1.0f);
+
+        painter.ModelGUID = Guid.Empty; // makes sure there's no more synchronization
+    }
+
+    public void PaintUVCoordinates(Vector2 uv, P3D_Brush brush)
+    {
+        var painter = GetComponent<P3D_Paintable>().GetPainter();
+
+        painter.SetBrush(brush);
+        
+        painter.ModelGUID = Guid.Empty; // makes sure there's no synchronization
+
+        painter.Paint(uv);
+    }
+
+    public void ClearPaint()
+    {
+        P3D_Paintable paintable = GetComponent<P3D_Paintable>();
+        Material material = P3D_Helper.GetMaterial(this.gameObject, paintable.MaterialIndex);
+
+        if (material != null)
+        {
+            Texture2D texture = material.GetTexture(paintable.TextureName) as Texture2D;
+
+            if (texture != null)
+            {
+                P3D_Helper.ClearTexture(texture, Color.white, true);
+            }
+        }
     }
 
     // Update is called once per frame

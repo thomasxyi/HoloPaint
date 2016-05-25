@@ -22,12 +22,45 @@ public class ModelsManager : Singleton<ModelsManager>
             PrefabModelsDictionary.Add(prefabHologram.name, prefabHologram);
         }
         Messages.Instance.MessageHandlers[Messages.HoloPaintMessageID.InstantiateModel] = this.OnInstantiateHologram;
+        Messages.Instance.MessageHandlers[Messages.HoloPaintMessageID.PaintUV] = this.OnPaintUV;
+        Messages.Instance.MessageHandlers[Messages.HoloPaintMessageID.ClearPaint] = this.OnClearPaint;
+
+        Messages.Instance.MessageHandlers[Messages.HoloPaintMessageID.Texture2D] = this.OnTexture2DReceived;
     }
 
     // Update is called once per frame
     void Update()
     {
 
+    }
+
+    void OnTexture2DReceived(NetworkInMessage msg)
+    {
+        // We read the user ID but we don't use it here.
+        msg.ReadInt64();
+
+        int w = msg.ReadInt32();
+        int h = msg.ReadInt32();
+
+        uint len = (uint)msg.ReadInt32();
+        byte[] data = new byte[len];
+
+        msg.ReadArray(data, len);
+
+        Texture2D tex = new Texture2D(w, h);
+
+        tex.LoadImage(data);
+
+        //SpriteLayer.mainTexture = tex;
+    }
+
+    void OnClearPaint(NetworkInMessage msg)
+    {
+        // We read the user ID but we don't use it here.
+        msg.ReadInt64();
+
+        string instanceUid = msg.ReadString();
+        ClearPaint(new Guid(instanceUid));
     }
 
     void OnInstantiateHologram(NetworkInMessage msg)
@@ -41,11 +74,40 @@ public class ModelsManager : Singleton<ModelsManager>
         InstantiateHologram(modelName, new Guid(instanceUid));
     }
 
+    void OnPaintUV(NetworkInMessage msg)
+    {
+        long userId = msg.ReadInt64();
+        P3D_Brush userBrush = BrushManager.Instance.GetGlobalBrush(userId);
+
+        string instanceUid = msg.ReadString();
+        GameObject model = ActiveModelsDictionary[new Guid(instanceUid)];
+
+        Vector3 uv = Messages.Instance.ReadVector3(msg);
+
+        model.GetComponent<TexturePainter>().PaintUVCoordinates(uv, userBrush);
+    }
+
     public void InstantiateHologram(string name)
     {
         Guid uid = Guid.NewGuid();
         InstantiateHologram(name, uid);
         Messages.Instance.SendInstantiateModel(name, uid);
+    }
+
+    public void ClearAllPaint()
+    {
+        foreach (Guid uid in ActiveModelsDictionary.Keys)
+        {
+            ClearPaint(uid);
+            Messages.Instance.SendClearPaint(uid);
+        }
+    }
+
+    public void ClearPaint(Guid uid)
+    {
+        GameObject model = ActiveModelsDictionary[uid];
+        model.GetComponent<TexturePainter>().ClearPaint();
+        // DO NOT SEND CLEAR MESSAGE HERE, WILL CAUSE FEEDBACK LOOP
     }
 
     void InstantiateHologram(string name, Guid uid)
