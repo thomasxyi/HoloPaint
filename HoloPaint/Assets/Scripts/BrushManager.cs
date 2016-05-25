@@ -9,7 +9,7 @@ using HoloToolkit.Sharing;
 public class BrushManager : Singleton<BrushManager>
 {
     P3D_Brush LocalBrush;
-    public float StepSize = 1.0f;
+    float StepSize = 0.001f;
 
     Dictionary<long, P3D_Brush> UsersBrushDictionary;
 
@@ -33,6 +33,11 @@ public class BrushManager : Singleton<BrushManager>
             UsersBrushDictionary.Add(userId, brush);
         }
         return UsersBrushDictionary[userId];
+    }
+
+    public float GetStepSize()
+    {
+        return StepSize;
     }
 
     public void SetColor(Color c)
