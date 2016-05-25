@@ -5,6 +5,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using HoloToolkit.Unity;
 using HoloToolkit.Sharing;
+using System;
 
 public class Messages : Singleton<Messages>
 {
@@ -18,6 +19,7 @@ public class Messages : Singleton<Messages>
         Texture2D = MessageID.UserMessageIDStart,
         DrawSprite,
         ClearPaint,
+        InstantiateModel,
         Max
     }
 
@@ -134,6 +136,26 @@ public class Messages : Singleton<Messages>
                 MessagePriority.Immediate,
                 MessageReliability.ReliableOrdered,
                 MessageChannel.Avatar);
+        }
+    }
+
+    public void SendInstantiateModel(string name, Guid uid)
+    {
+        // If we are connected to a session
+        if (this.serverConnection != null && this.serverConnection.IsConnected())
+        {
+            // Create an outgoing network message to contain all the info we want to send
+            NetworkOutMessage msg = CreateMessage((byte)HoloPaintMessageID.InstantiateModel);
+
+            msg.Write(name);
+            msg.Write(uid.ToString());
+
+            // Send the message as a broadcast, which will cause the server to forward it to all other users in the session.  
+            this.serverConnection.Broadcast(
+                msg,
+                MessagePriority.Immediate,
+                MessageReliability.ReliableOrdered,
+                MessageChannel.Default);
         }
     }
 

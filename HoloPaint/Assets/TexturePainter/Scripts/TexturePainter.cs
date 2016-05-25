@@ -1,21 +1,14 @@
-﻿/// <summary>
-/// CodeArtist.mx 2015
-/// This is the main class of the project, its in charge of raycasting to a model and place brush prefabs infront of the canvas camera.
-/// If you are interested in saving the painted texture you can use the method at the end and should save it to a file.
-/// </summary>
-
-
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using HoloToolkit.Unity;
 using UnityEngine.VR.WSA.Input;
 using HoloToolkit.Sharing;
+using System;
 
-public enum Painter_BrushMode { PAINT, DECAL };
 public class TexturePainter : Singleton<TexturePainter>
 {
-    P3D_Paintable paintable;
+    public Guid uid { get; set; }
     bool navigating = false;
     Vector3 lastDrawn;
     Vector3 navigStart;
@@ -83,15 +76,15 @@ public class TexturePainter : Singleton<TexturePainter>
         Vector3 endPos = Vector3.zero;
         if (HitTestPosition(ref startPos, ref endPos))
         {
-            DoAction(startPos, endPos, BrushManager.Instance.Brush);
+            PaintWorldCoordinates(startPos, endPos, BrushManager.Instance.Brush);
         }
     }
 
     //The main action, instantiates a brush or decal entity at the clicked position on the UV map
-    void DoAction(Vector3 startPos, Vector3 endPos, P3D_Brush brush)
+    void PaintWorldCoordinates(Vector3 startPos, Vector3 endPos, P3D_Brush brush)
     {
         // Get painter for this paintable
-        var painter = paintable.GetPainter();
+        var painter = GetComponent<P3D_Paintable>().GetPainter();
 
         // Change painter's current brush
         painter.SetBrush(brush);
@@ -101,7 +94,9 @@ public class TexturePainter : Singleton<TexturePainter>
         painter.PaintNearest(endPos, 1.0f);
     }
 
-    void Update() {
+    // Update is called once per frame
+    void Update()
+    {
         if (!GestureManager.Instance.IsManipulating)
         {
             navigStart = GazeManager.Instance.HitInfo.point;
@@ -110,7 +105,7 @@ public class TexturePainter : Singleton<TexturePainter>
     }
 
     //Returns the position on the texuremap according to a hit in the mesh collider
-    bool HitTestPosition(ref Vector3 startPos, ref Vector3 endPos)
+    public bool HitTestPosition(ref Vector3 startPos, ref Vector3 endPos)
     {
         if (!GestureManager.Instance.IsManipulating)
         {
@@ -138,7 +133,6 @@ public class TexturePainter : Singleton<TexturePainter>
                 GestureManager.Instance.OverrideFocusedObject = this.gameObject;
             }
             RaycastHit hit = GazeManager.Instance.HitInfo;
-            paintable = hit.collider.gameObject.GetComponent<P3D_Paintable>();
             //startPos = hit.point;
             endPos = hit.point;
             //lastDrawn = hit.point;
@@ -151,5 +145,4 @@ public class TexturePainter : Singleton<TexturePainter>
 
         return true;
     }
-
 }

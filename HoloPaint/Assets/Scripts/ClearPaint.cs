@@ -4,6 +4,7 @@ public class ClearPaint : MonoBehaviour
 {
     public void OnSelect()
     {
-        Messages.Instance.SendClearPaint();
+        //Messages.Instance.SendClearPaint();
+        ModelsManager.Instance.InstantiateHologram("Whale");
     }
 }
