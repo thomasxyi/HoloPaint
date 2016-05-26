@@ -29,6 +29,9 @@ public class CursorManager : Singleton<CursorManager>
     [Tooltip("Distance, in meters, to offset the cursor from the collision point.")]
     public float DistanceFromCollision = 0.01f;
 
+    public Vector3 brushLocation;
+    public Vector3 brushDirection;
+
     void Awake()
     {
         if (CursorOnHolograms == null || CursorOffHolograms == null || BrushCursor == null)
@@ -36,6 +39,8 @@ public class CursorManager : Singleton<CursorManager>
             return;
         }
 
+        brushLocation = Vector3.zero;
+        brushLocation = Vector3.zero;
 
         // Hide the Cursors to begin with.
         CursorOnHolograms.SetActive(false);
@@ -76,15 +81,17 @@ public class CursorManager : Singleton<CursorManager>
         // Place the cursor at the calculated position.
         if (!GestureManager.Instance.IsManipulating)
         {
-            navigStart = GazeManager.Instance.HitInfo.point;
-            isNavigating = false;
+            //navigStart = GazeManager.Instance.HitInfo.point;
+            //isNavigating = false;
             this.gameObject.transform.position = GazeManager.Instance.Position + GazeManager.Instance.Normal * DistanceFromCollision;
             // Orient the cursor to match the surface being gazed at.
             this.gameObject.transform.up = GazeManager.Instance.Normal;
         }
         else
         {
-            this.gameObject.transform.position = navigStart + GestureManager.Instance.ManipulationPosition * 2.0f;
+            //this.gameObject.transform.position = navigStart + GestureManager.Instance.ManipulationPosition * 2.0f;
+            this.gameObject.transform.position = this.brushLocation;
+            this.gameObject.transform.up = this.brushDirection;
         }
         
     }

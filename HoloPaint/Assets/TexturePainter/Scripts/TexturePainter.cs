@@ -38,25 +38,31 @@ public class TexturePainter : MonoBehaviour
             // Raycast into the 3D scene
             if (Physics.Raycast(origin, endPos - origin, out hit, 10.0f))
             {
+                CursorManager.Instance.brushDirection = hit.normal;
                 painter.Paint(hit.textureCoord);
             }
         }
         else
         {
+            Vector3 origin = Camera.main.transform.position;
+            var hit = default(RaycastHit);
+            if (Physics.Raycast(origin, endPos - origin, out hit, 10.0f))
+            {
+                CursorManager.Instance.brushDirection = hit.normal;
+            }
             var stepCount = Vector3.Distance(startPos, endPos) / BrushManager.Instance.GetStepSize() + 1;
             for (var i = 0; i < stepCount; i++)
             {
                 var subPos = Vector3.Lerp(startPos, endPos, i / stepCount);
 
-                var hit = default(RaycastHit);
-                Vector3 origin = Camera.main.transform.position;
-
+                hit = default(RaycastHit);
                 // Raycast into the 3D scene
                 if (Physics.Raycast(origin, endPos - origin, out hit, 10.0f))
                 {
                     painter.Paint(hit.textureCoord);
                 }
             }
+
         }
 
         painter.ModelGUID = Guid.Empty; // makes sure there's no more synchronization
@@ -121,6 +127,7 @@ public class TexturePainter : MonoBehaviour
             // draw based on saved gaze position
             startPos = lastDrawn;
             endPos = navigStart + GestureManager.Instance.ManipulationPosition * 2.0f;
+            CursorManager.Instance.brushLocation = endPos;
         }
         else if (GazeManager.Instance.Hit)
         {

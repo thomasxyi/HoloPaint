@@ -16,6 +16,7 @@ public class BrushManager : Singleton<BrushManager>
     void Start()
     {
         UsersBrushDictionary = new Dictionary<long, P3D_Brush>();
+        //LocalBrush.Shape = 
         Messages.Instance.MessageHandlers[Messages.HoloPaintMessageID.UpdateBrush] = this.OnUpdateBrush;
     }
 
