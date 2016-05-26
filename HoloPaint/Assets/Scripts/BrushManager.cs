@@ -9,14 +9,12 @@ using HoloToolkit.Sharing;
 public class BrushManager : Singleton<BrushManager>
 {
     P3D_Brush LocalBrush;
-    float StepSize = 0.1f;
+    float StepSize = 0.01f;
 
-    Dictionary<long, P3D_Brush> UsersBrushDictionary;
+    Dictionary<long, P3D_Brush> UsersBrushDictionary = new Dictionary<long, P3D_Brush>();
 
     void Start()
     {
-        UsersBrushDictionary = new Dictionary<long, P3D_Brush>();
-        //LocalBrush.Shape = 
         Messages.Instance.MessageHandlers[Messages.HoloPaintMessageID.UpdateBrush] = this.OnUpdateBrush;
     }
 
@@ -70,6 +68,12 @@ public class BrushManager : Singleton<BrushManager>
     void OnUpdateBrush(NetworkInMessage msg)
     {
         long userId = msg.ReadInt64();
+        if (!UsersBrushDictionary.ContainsKey(userId))
+        {
+            P3D_Brush brush = new P3D_Brush();
+            brush.Color = Color.green;
+            UsersBrushDictionary.Add(userId, brush);
+        }
         P3D_Brush userBrush = UsersBrushDictionary[userId];
 
         userBrush.Color = new Color(msg.ReadFloat(), msg.ReadFloat(), msg.ReadFloat(), msg.ReadFloat());

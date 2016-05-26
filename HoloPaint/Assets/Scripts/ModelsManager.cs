@@ -60,6 +60,8 @@ public class ModelsManager : Singleton<ModelsManager>
         msg.ReadInt64();
 
         string instanceUid = msg.ReadString();
+        if (!ActiveModelsDictionary.ContainsKey(new Guid(instanceUid)))
+            return;
         ClearPaint(new Guid(instanceUid));
     }
 
@@ -80,6 +82,8 @@ public class ModelsManager : Singleton<ModelsManager>
         P3D_Brush userBrush = BrushManager.Instance.GetGlobalBrush(userId);
 
         string instanceUid = msg.ReadString();
+        if (!ActiveModelsDictionary.ContainsKey(new Guid(instanceUid)))
+            return;
         GameObject model = ActiveModelsDictionary[new Guid(instanceUid)];
 
         Vector3 uv = Messages.Instance.ReadVector3(msg);
