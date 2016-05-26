@@ -9,7 +9,7 @@ using HoloToolkit.Sharing;
 public class BrushManager : Singleton<BrushManager>
 {
     P3D_Brush LocalBrush;
-    float StepSize = 0.001f;
+    float StepSize = 0.1f;
 
     Dictionary<long, P3D_Brush> UsersBrushDictionary;
 

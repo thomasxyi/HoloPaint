@@ -44,22 +44,26 @@ public class TexturePainter : MonoBehaviour
         }
         else
         {
+            var startHit = default(RaycastHit);
+            var endHit = default(RaycastHit);
             Vector3 origin = Camera.main.transform.position;
-            var hit = default(RaycastHit);
-            if (Physics.Raycast(origin, endPos - origin, out hit, 10.0f))
-            {
-                CursorManager.Instance.brushDirection = hit.normal;
-            }
-            var stepCount = Vector3.Distance(startPos, endPos) / BrushManager.Instance.GetStepSize() + 1;
-            for (var i = 0; i < stepCount; i++)
-            {
-                var subPos = Vector3.Lerp(startPos, endPos, i / stepCount);
 
-                hit = default(RaycastHit);
-                // Raycast into the 3D scene
-                if (Physics.Raycast(origin, endPos - origin, out hit, 10.0f))
+            // Raycast into the 3D scene
+            if (Physics.Raycast(origin, startPos - origin, out startHit, 10.0f) && Physics.Raycast(origin, endPos - origin, out endHit, 10.0f))
+            {
+                CursorManager.Instance.brushDirection = endHit.normal;
+                Vector2 startUV = startHit.textureCoord;
+                Vector2 endUV = endHit.textureCoord;
+                if (Vector3.Distance(startPos, endPos) > Vector2.Distance(startUV, endUV))
                 {
-                    painter.Paint(hit.textureCoord);
+                    var stepCount = Vector2.Distance(startUV, endUV) / BrushManager.Instance.GetStepSize() + 1;
+                    
+                    for (var i = 0; i < stepCount; i++)
+                    {
+                        var subUV = Vector2.Lerp(startUV, endUV, i / stepCount);
+
+                        painter.Paint(subUV);
+                    }
                 }
             }
 
@@ -127,6 +131,7 @@ public class TexturePainter : MonoBehaviour
             // draw based on saved gaze position
             startPos = lastDrawn;
             endPos = navigStart + GestureManager.Instance.ManipulationPosition * 2.0f;
+            lastDrawn = endPos;
             CursorManager.Instance.brushLocation = endPos;
         }
         else if (GazeManager.Instance.Hit)
