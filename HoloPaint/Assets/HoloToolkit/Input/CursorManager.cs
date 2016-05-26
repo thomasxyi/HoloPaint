@@ -31,6 +31,7 @@ public class CursorManager : Singleton<CursorManager>
 
     public Vector3 brushLocation;
     public Vector3 brushDirection;
+    public bool onModel;
 
     void Awake()
     {
@@ -46,6 +47,7 @@ public class CursorManager : Singleton<CursorManager>
         CursorOnHolograms.SetActive(false);
         CursorOffHolograms.SetActive(false);
         BrushCursor.SetActive(false);
+        onModel = false;
     }
 
     void LateUpdate()
@@ -56,13 +58,15 @@ public class CursorManager : Singleton<CursorManager>
         }
 
         // Decide which cursor to show up
-        if (GazeManager.Instance.HitInfo.collider.gameObject.GetComponent<P3D_Paintable>() != null &&
+        if (GazeManager.Instance.Hit && GazeManager.Instance.HitInfo.collider.gameObject != null &&
+            GazeManager.Instance.HitInfo.collider.gameObject.GetComponent<P3D_Paintable>() != null &&
             AppStateManager.Instance.CurrentAppState == AppStateManager.AppState.Drawing)
         {
             BrushCursor.SetActive(true);
             CursorOffHolograms.SetActive(false);
             CursorOnHolograms.SetActive(false);
-        } else
+        }
+        else
         {
             if (GazeManager.Instance.Hit)
             {
@@ -87,7 +91,7 @@ public class CursorManager : Singleton<CursorManager>
             // Orient the cursor to match the surface being gazed at.
             this.gameObject.transform.up = GazeManager.Instance.Normal;
         }
-        else
+        else if (AppStateManager.Instance.CurrentAppState == AppStateManager.AppState.Drawing && onModel)
         {
             //this.gameObject.transform.position = navigStart + GestureManager.Instance.ManipulationPosition * 2.0f;
             this.gameObject.transform.position = this.brushLocation;

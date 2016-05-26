@@ -39,7 +39,11 @@ public class TexturePainter : MonoBehaviour
             if (Physics.Raycast(origin, endPos - origin, out hit, 10.0f))
             {
                 CursorManager.Instance.brushDirection = hit.normal;
+                CursorManager.Instance.onModel = true;
                 painter.Paint(hit.textureCoord);
+            }
+            else {
+                CursorManager.Instance.onModel = false;
             }
         }
         else
@@ -52,6 +56,7 @@ public class TexturePainter : MonoBehaviour
             if (Physics.Raycast(origin, startPos - origin, out startHit, 10.0f) && Physics.Raycast(origin, endPos - origin, out endHit, 10.0f))
             {
                 CursorManager.Instance.brushDirection = endHit.normal;
+                CursorManager.Instance.onModel = true;
                 Vector2 startUV = startHit.textureCoord;
                 Vector2 endUV = endHit.textureCoord;
                 if (Vector3.Distance(startPos, endPos) > Vector2.Distance(startUV, endUV))
@@ -66,7 +71,9 @@ public class TexturePainter : MonoBehaviour
                     }
                 }
             }
-
+            else {
+                CursorManager.Instance.onModel = false;
+            }
         }
 
         painter.ModelGUID = Guid.Empty; // makes sure there's no more synchronization
