@@ -40,6 +40,7 @@ public class TexturePainter : MonoBehaviour
             {
                 CursorManager.Instance.brushDirection = hit.normal;
                 CursorManager.Instance.onModel = true;
+                CursorManager.Instance.brushLocation = hit.point + hit.normal * 0.01f;
                 painter.Paint(hit.textureCoord);
             }
             else {
@@ -56,6 +57,7 @@ public class TexturePainter : MonoBehaviour
             if (Physics.Raycast(origin, startPos - origin, out startHit, 10.0f) && Physics.Raycast(origin, endPos - origin, out endHit, 10.0f))
             {
                 CursorManager.Instance.brushDirection = endHit.normal;
+                CursorManager.Instance.brushLocation = endHit.point + endHit.normal * 0.01f; 
                 CursorManager.Instance.onModel = true;
                 Vector2 startUV = startHit.textureCoord;
                 Vector2 endUV = endHit.textureCoord;
@@ -139,7 +141,6 @@ public class TexturePainter : MonoBehaviour
             startPos = lastDrawn;
             endPos = navigStart + GestureManager.Instance.ManipulationPosition * 2.0f;
             lastDrawn = endPos;
-            CursorManager.Instance.brushLocation = endPos;
         }
         else if (GazeManager.Instance.Hit)
         {

@@ -58,8 +58,9 @@ public class CursorManager : Singleton<CursorManager>
         }
 
         // Decide which cursor to show up
-        if (GazeManager.Instance.Hit && GazeManager.Instance.HitInfo.collider.gameObject != null &&
-            GazeManager.Instance.HitInfo.collider.gameObject.GetComponent<P3D_Paintable>() != null &&
+        if (((GazeManager.Instance.Hit && GazeManager.Instance.HitInfo.collider.gameObject != null &&
+            GazeManager.Instance.HitInfo.collider.gameObject.GetComponent<P3D_Paintable>() != null) ||
+            (onModel && GestureManager.Instance.IsManipulating)) &&
             AppStateManager.Instance.CurrentAppState == AppStateManager.AppState.Drawing)
         {
             BrushCursor.SetActive(true);
