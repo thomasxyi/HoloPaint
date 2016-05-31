@@ -21,16 +21,15 @@ public class HologramPlacement : Singleton<HologramPlacement>
 
     void Update()
     {
+        // make all non paintable objects face the camera
+        if (this.gameObject.GetComponent<P3D_Paintable>() == null)
+        {
+            transform.LookAt(Camera.main.transform);
+        }
+
         if ((AppStateManager.Instance.CurrentAppState == AppStateManager.AppState.Placement) && (Placed == false))
         {
             // if not paintable make it face the user
-            if (this.gameObject.GetComponent<P3D_Paintable>() == null)
-            {
-                Quaternion toQuat = Camera.main.transform.localRotation;
-                toQuat.x = 0;
-                toQuat.z = 0;
-                transform.rotation = toQuat;
-            }
 
             if (Reset) {
                 transform.position = Vector3.Lerp(transform.position, Camera.main.transform.position + Camera.main.transform.forward * 2, 0.2f);
