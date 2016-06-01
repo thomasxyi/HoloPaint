@@ -1,23 +1,19 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
-using System.Collections;
 using HoloToolkit.Unity;
-using UnityEngine.VR.WSA.Input;
 using System.Collections.Generic;
 using HoloToolkit.Sharing;
 
 public class BrushManager : Singleton<BrushManager>
 {
+    public P3D_Brush DefaultBrush;
     public P3D_Brush LocalBrush;
-    public GameObject Cursor;
-    float StepSize = 0.01f;
+    public float StepSize = 0.01f;
 
     Dictionary<long, P3D_Brush> UsersBrushDictionary = new Dictionary<long, P3D_Brush>();
 
     void Start()
     {
         Messages.Instance.MessageHandlers[Messages.HoloPaintMessageID.UpdateBrush] = this.OnUpdateBrush;
-        //LocalBrush.Shape = Cursor.GetComponent<SpriteRenderer>().material.mainTexture as Texture2D;
     }
 
     public P3D_Brush GetLocalBrush()
@@ -38,7 +34,7 @@ public class BrushManager : Singleton<BrushManager>
 
     public float GetStepSize()
     {
-        return StepSize;
+        return System.Math.Min(StepSize * LocalBrush.Size.x, 1.0f);
     }
 
     public void SetColor(Color c)
@@ -49,6 +45,7 @@ public class BrushManager : Singleton<BrushManager>
 
     public void SetSize(Vector2 s)
     {
+        //TODO scale cursor by 0.1 every 20 steps
         LocalBrush.Size = s;
         UpdateGlobalBrush();
     }
@@ -57,7 +54,9 @@ public class BrushManager : Singleton<BrushManager>
     public void InitializeLocalBrush()
     {
         LocalBrush = new P3D_Brush();
-        LocalBrush.Color = Color.red;
+        LocalBrush.Color = DefaultBrush.Color;
+        LocalBrush.Shape = DefaultBrush.Shape;
+        LocalBrush.Size = DefaultBrush.Size;
         UsersBrushDictionary.Add(Messages.Instance.localUserID, LocalBrush);
         UpdateGlobalBrush();
     }
