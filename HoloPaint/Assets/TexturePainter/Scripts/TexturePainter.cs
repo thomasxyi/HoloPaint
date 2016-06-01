@@ -38,12 +38,19 @@ public class TexturePainter : MonoBehaviour
             // Raycast into the 3D scene
             if (Physics.Raycast(origin, endPos - origin, out hit, 10.0f))
             {
-                CursorManager.Instance.brushDirection = hit.normal;
-                CursorManager.Instance.onModel = true;
-                CursorManager.Instance.brushLocation = hit.point + hit.normal * 0.01f;
-                painter.Paint(hit.textureCoord);
+                if (hit.collider.gameObject != null && hit.collider.gameObject.GetComponent<P3D_Paintable>() != null)
+                {
+                    CursorManager.Instance.brushDirection = hit.normal;
+                    CursorManager.Instance.onModel = true;
+                    CursorManager.Instance.brushLocation = hit.point + hit.normal * 0.01f;
+                    painter.Paint(hit.textureCoord);
+                }
+                else {
+                    CursorManager.Instance.onModel = false;
+                }
             }
             else {
+                CursorManager.Instance.onModel = false;
                 CursorManager.Instance.onModel = false;
             }
         }
@@ -56,21 +63,29 @@ public class TexturePainter : MonoBehaviour
             // Raycast into the 3D scene
             if (Physics.Raycast(origin, startPos - origin, out startHit, 10.0f) && Physics.Raycast(origin, endPos - origin, out endHit, 10.0f))
             {
-                CursorManager.Instance.brushDirection = endHit.normal;
-                CursorManager.Instance.brushLocation = endHit.point + endHit.normal * 0.01f; 
-                CursorManager.Instance.onModel = true;
-                Vector2 startUV = startHit.textureCoord;
-                Vector2 endUV = endHit.textureCoord;
-                if (Vector3.Distance(startPos, endPos) > Vector2.Distance(startUV, endUV))
+                if (startHit.collider.gameObject != null && startHit.collider.gameObject.GetComponent<P3D_Paintable>() != null &&
+                    endHit.collider.gameObject != null && endHit.collider.gameObject.GetComponent<P3D_Paintable>() != null)
                 {
-                    var stepCount = Vector2.Distance(startUV, endUV) / BrushManager.Instance.GetStepSize() + 1;
-                    
-                    for (var i = 0; i < stepCount; i++)
+                    CursorManager.Instance.brushDirection = endHit.normal;
+                    CursorManager.Instance.brushLocation = endHit.point + endHit.normal * 0.01f;
+                    CursorManager.Instance.onModel = true;
+                    Vector2 startUV = startHit.textureCoord;
+                    Vector2 endUV = endHit.textureCoord;
+                    if (Vector3.Distance(startPos, endPos) > Vector2.Distance(startUV, endUV))
                     {
-                        var subUV = Vector2.Lerp(startUV, endUV, i / stepCount);
+                        var stepCount = Vector2.Distance(startUV, endUV) / BrushManager.Instance.GetStepSize() + 1;
 
-                        painter.Paint(subUV);
+                        for (var i = 0; i < stepCount; i++)
+                        {
+                            var subUV = Vector2.Lerp(startUV, endUV, i / stepCount);
+
+                            painter.Paint(subUV);
+                        }
                     }
+                }
+                else
+                {
+                    CursorManager.Instance.onModel = false;
                 }
             }
             else {

@@ -8,7 +8,8 @@ using HoloToolkit.Sharing;
 
 public class BrushManager : Singleton<BrushManager>
 {
-    P3D_Brush LocalBrush;
+    public P3D_Brush LocalBrush;
+    public GameObject Cursor;
     float StepSize = 0.01f;
 
     Dictionary<long, P3D_Brush> UsersBrushDictionary = new Dictionary<long, P3D_Brush>();
@@ -16,6 +17,7 @@ public class BrushManager : Singleton<BrushManager>
     void Start()
     {
         Messages.Instance.MessageHandlers[Messages.HoloPaintMessageID.UpdateBrush] = this.OnUpdateBrush;
+        //LocalBrush.Shape = Cursor.GetComponent<SpriteRenderer>().material.mainTexture as Texture2D;
     }
 
     public P3D_Brush GetLocalBrush()

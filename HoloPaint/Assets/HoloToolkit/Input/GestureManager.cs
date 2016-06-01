@@ -162,7 +162,7 @@ namespace HoloToolkit.Unity
             }
         }
 
-        private GameObject getFocusedObject() {
+        public GameObject getFocusedObject() {
             if (OverrideFocusedObject != null) {
                 return OverrideFocusedObject;
             }
