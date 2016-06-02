@@ -7,7 +7,7 @@ public class BrushManager : Singleton<BrushManager>
 {
     public P3D_Brush DefaultBrush;
     public P3D_Brush LocalBrush;
-    public float StepSize = 0.01f;
+    public float StepSize = 0.02f;
 
     Dictionary<long, P3D_Brush> UsersBrushDictionary = new Dictionary<long, P3D_Brush>();
 
