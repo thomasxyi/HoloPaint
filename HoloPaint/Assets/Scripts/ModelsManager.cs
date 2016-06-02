@@ -9,7 +9,8 @@ public class ModelsManager : Singleton<ModelsManager>
 {
     GameObject[] PrefabModels;
     Dictionary<string, GameObject> PrefabModelsDictionary;
-    Dictionary<Guid, GameObject> ActiveModelsDictionary;
+    public Dictionary<Guid, GameObject> ActiveModelsDictionary;
+    public HashSet<Guid> reservedids;
 
     // Use this for initialization
     void Start()
@@ -17,6 +18,7 @@ public class ModelsManager : Singleton<ModelsManager>
         PrefabModels = Resources.LoadAll<GameObject>("Models");
         PrefabModelsDictionary = new Dictionary<string, GameObject>();
         ActiveModelsDictionary = new Dictionary<Guid, GameObject>();
+        reservedids = new HashSet<Guid>();
         foreach (GameObject prefabHologram in PrefabModels)
         {
             PrefabModelsDictionary.Add(prefabHologram.name, prefabHologram);
@@ -93,7 +95,10 @@ public class ModelsManager : Singleton<ModelsManager>
 
     public void InstantiateHologram(string name)
     {
-        Guid uid = Guid.NewGuid();
+        Guid uid = new Guid("0");
+        while (reservedids.Contains(uid)) {
+            uid = Guid.NewGuid();
+        }
         InstantiateHologram(name, uid);
         Messages.Instance.SendInstantiateModel(name, uid);
     }
