@@ -9,7 +9,8 @@ public class MenuColliderScript : MonoBehaviour {
         {
             this.GetComponent<BoxCollider>().enabled = true;
         }
-        else {
+        else
+        {
             this.GetComponent<BoxCollider>().enabled = false;
         }
     }

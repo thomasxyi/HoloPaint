@@ -1,9 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
-using UnityEngine.Windows.Speech;
-using UnityEngine.VR.WSA;
-using HoloToolkit.Unity;
-using HoloToolkit.Sharing;
 
 public class PaintButton : MonoBehaviour
 {
@@ -11,5 +6,6 @@ public class PaintButton : MonoBehaviour
 	{
         this.gameObject.GetComponent<AudioSource>().Play();
         AppStateManager.Instance.CurrentAppState = AppStateManager.AppState.Drawing;
+        ModeIndicator.Instance.setText("Current Mode: Painting\nPinch and Drag to start Drawing");
     }
 }

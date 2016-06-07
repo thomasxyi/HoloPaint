@@ -33,9 +33,6 @@ public class CursorManager : Singleton<CursorManager>
     public Vector3 brushLocation;
     public Vector3 brushDirection;
     public bool onModel;
-    
-    private Dictionary<long, GameObject> uidToCursor = new Dictionary<long, GameObject>();
-    public GameObject localCursor;
 
     void Awake()
     {
@@ -52,8 +49,6 @@ public class CursorManager : Singleton<CursorManager>
         CursorOffHolograms.SetActive(false);
         BrushCursor.SetActive(false);
         onModel = false;
-        uidToCursor.Add(Messages.Instance.localUserID, localCursor);
-        //BrushManager.Instance.Cursor = localCursor;
     }
 
     void LateUpdate()

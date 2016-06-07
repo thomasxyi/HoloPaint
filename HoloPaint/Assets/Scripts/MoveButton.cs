@@ -6,5 +6,6 @@ public class MoveButton : MonoBehaviour
     {
         // change app state
         AppStateManager.Instance.CurrentAppState = AppStateManager.AppState.Placement;
+        ModeIndicator.Instance.setText("Current Mode: Placement\nPinch to Pick up / Place an object\nGaze or Scroll to change position");
     }
 }
