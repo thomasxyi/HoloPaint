@@ -8,15 +8,26 @@ using HoloToolkit.Sharing;
 
 public class PaintSelectionButton : MonoBehaviour
 {
-    bool isSet = false;
+    public bool isSet;
+    public int level;
+
     public void OnSelect()
     {
-        Image[] images  = this.gameObject.GetComponentsInChildren<Image>();
-        for(int i = 1; i < images.Length; i++)
+
+        PaintSelectionButton[] children  = this.gameObject.GetComponentsInChildren<PaintSelectionButton>();
+        foreach (var child in children) 
         {
-          
-            images[i].enabled = !isSet;
-            this.gameObject.GetComponentInChildren<Animation>().Play();
+           if(child.level == this.level + 1)
+            {
+                child.gameObject.GetComponent<Image>().enabled = !isSet;
+                Text t = child.gameObject.GetComponentInChildren<Text>();
+                if (t != null)
+                {
+                    t.enabled = !isSet;
+                }              
+                child.gameObject.GetComponent<BoxCollider>().enabled = !isSet;
+            }
+                                   
         }
         isSet = !isSet;
         
