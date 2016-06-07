@@ -13,11 +13,11 @@ public class PaintSelectionButton : MonoBehaviour
 
     public void OnSelect()
     {
-
+        this.gameObject.GetComponent<AudioSource>().Play();
         PaintSelectionButton[] children  = this.gameObject.GetComponentsInChildren<PaintSelectionButton>();
         foreach (var child in children) 
         {
-           if(child.level == this.level + 1)
+           if((child.level == this.level + 1) || (isSet && child.level != this.level))
             {
                 child.gameObject.GetComponent<Image>().enabled = !isSet;
                 Text t = child.gameObject.GetComponentInChildren<Text>();

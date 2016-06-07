@@ -9,6 +9,7 @@ public class PaintButton : MonoBehaviour
 {
 	public void OnSelect()
 	{
+        this.gameObject.GetComponent<AudioSource>().Play();
         AppStateManager.Instance.CurrentAppState = AppStateManager.AppState.Drawing;
     }
 }
