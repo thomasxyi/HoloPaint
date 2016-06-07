@@ -27,6 +27,7 @@ public class TexturePainter : MonoBehaviour
         // Change painter's current brush
         painter.SetBrush(brush);
 
+        // setting this makes the painting synchronized
         painter.ModelGUID = this.uid;
 
         // Paint at the hit coordinate
@@ -64,7 +65,9 @@ public class TexturePainter : MonoBehaviour
             if (Physics.Raycast(origin, startPos - origin, out startHit, 10.0f) && Physics.Raycast(origin, endPos - origin, out endHit, 10.0f))
             {
                 if (startHit.collider.gameObject != null && startHit.collider.gameObject.GetComponent<P3D_Paintable>() != null &&
-                    endHit.collider.gameObject != null && endHit.collider.gameObject.GetComponent<P3D_Paintable>() != null)
+                    endHit.collider.gameObject != null && endHit.collider.gameObject.GetComponent<P3D_Paintable>() != null &&
+                    startHit.collider.gameObject.GetComponent<TexturePainter>().uid == this.uid &&
+                    endHit.collider.gameObject.GetComponent<TexturePainter>().uid == this.uid)
                 {
                     CursorManager.Instance.brushDirection = endHit.normal;
                     CursorManager.Instance.brushLocation = endHit.point + endHit.normal * 0.01f;
@@ -126,6 +129,12 @@ public class TexturePainter : MonoBehaviour
                 P3D_Helper.ClearTexture(texture, c, true);
             }
         }
+    }
+
+    public void SetTexture(Texture2D texture)
+    {
+        var painter = GetComponent<P3D_Paintable>().GetPainter();
+        painter.SetTexture(texture);
     }
 
     // Update is called once per frame

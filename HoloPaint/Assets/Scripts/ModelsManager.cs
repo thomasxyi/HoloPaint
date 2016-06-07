@@ -27,7 +27,6 @@ public class ModelsManager : Singleton<ModelsManager>
         Messages.Instance.MessageHandlers[Messages.HoloPaintMessageID.PaintUV] = this.OnPaintUV;
         Messages.Instance.MessageHandlers[Messages.HoloPaintMessageID.ClearPaint] = this.OnClearPaint;
         Messages.Instance.MessageHandlers[Messages.HoloPaintMessageID.Paintbucket] = this.OnPaintbucket;
-
         Messages.Instance.MessageHandlers[Messages.HoloPaintMessageID.Texture2D] = this.OnTexture2DReceived;
     }
 
@@ -42,6 +41,10 @@ public class ModelsManager : Singleton<ModelsManager>
         // We read the user ID but we don't use it here.
         msg.ReadInt64();
 
+        string instanceUid = msg.ReadString();
+        if (!ActiveModelsDictionary.ContainsKey(new Guid(instanceUid)))
+            return;
+
         int w = msg.ReadInt32();
         int h = msg.ReadInt32();
 
@@ -50,11 +53,12 @@ public class ModelsManager : Singleton<ModelsManager>
 
         msg.ReadArray(data, len);
 
-        Texture2D tex = new Texture2D(w, h);
+        Texture2D texture = new Texture2D(w, h);
 
-        tex.LoadImage(data);
-
-        //SpriteLayer.mainTexture = tex;
+        texture.LoadImage(data);
+        
+        GameObject model = ActiveModelsDictionary[new Guid(instanceUid)];
+        model.GetComponent<TexturePainter>().SetTexture(texture);
     }
 
     void OnClearPaint(NetworkInMessage msg)

@@ -99,20 +99,22 @@ public class Messages : Singleton<Messages>
         return msg;
     }
 
-    public void SendTexture2D(Texture2D tex)
+    public void SendTexture2D(Texture2D texture, Guid uid)
     {
         // If we are connected to a session, broadcast our head info
         if (this.serverConnection != null && this.serverConnection.IsConnected())
         {
             // Create an outgoing network message to contain all the info we want to send
             NetworkOutMessage msg = CreateMessage((byte)HoloPaintMessageID.Texture2D);
+            
+            msg.Write(uid.ToString());
 
             // Store width and height
-            msg.Write(tex.width);
-            msg.Write(tex.height);
+            msg.Write(texture.width);
+            msg.Write(texture.height);
 
             // Encode to PNG
-            byte[] png = tex.EncodeToPNG();
+            byte[] png = texture.EncodeToPNG();
             msg.Write(png.Length);
             msg.WriteArray(png, (uint)png.Length);
 
@@ -120,8 +122,8 @@ public class Messages : Singleton<Messages>
             this.serverConnection.Broadcast(
                 msg,
                 MessagePriority.Immediate,
-                MessageReliability.ReliableOrdered,
-                MessageChannel.Avatar);
+                MessageReliability.Reliable,
+                MessageChannel.Default);
         }
     }
 
