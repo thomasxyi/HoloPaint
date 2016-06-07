@@ -8,17 +8,14 @@ using HoloToolkit.Sharing;
 public class ModelsManager : Singleton<ModelsManager>
 {
     GameObject[] PrefabModels;
-    Dictionary<string, GameObject> PrefabModelsDictionary;
-    public Dictionary<Guid, GameObject> ActiveModelsDictionary;
-    public HashSet<Guid> ReservedIDs;
+    Dictionary<string, GameObject> PrefabModelsDictionary = new Dictionary<string, GameObject>();
+    public Dictionary<Guid, GameObject> ActiveModelsDictionary = new Dictionary<Guid, GameObject>();
+    public HashSet<Guid> ReservedIDs = new HashSet<Guid>();
 
     // Use this for initialization
     void Start()
     {
         PrefabModels = Resources.LoadAll<GameObject>("Models");
-        PrefabModelsDictionary = new Dictionary<string, GameObject>();
-        ActiveModelsDictionary = new Dictionary<Guid, GameObject>();
-        ReservedIDs = new HashSet<Guid>();
         foreach (GameObject prefabHologram in PrefabModels)
         {
             PrefabModelsDictionary.Add(prefabHologram.name, prefabHologram);
