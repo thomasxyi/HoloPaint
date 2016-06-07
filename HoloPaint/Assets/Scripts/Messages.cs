@@ -174,7 +174,7 @@ public class Messages : Singleton<Messages>
         if (this.serverConnection != null && this.serverConnection.IsConnected())
         {
             // Create an outgoing network message to contain all the info we want to send
-            NetworkOutMessage msg = CreateMessage((byte)HoloPaintMessageID.PaintUV);
+            NetworkOutMessage msg = CreateMessage((byte)HoloPaintMessageID.UpdateBrush);
 
             // Color
             msg.Write(localBrush.Color.r);

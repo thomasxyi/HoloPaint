@@ -27,6 +27,8 @@ public class BrushManager : Singleton<BrushManager>
         {
             P3D_Brush brush = new P3D_Brush();
             brush.Color = Color.green;
+            brush.Shape = DefaultBrush.Shape;
+            brush.Size = DefaultBrush.Size;
             UsersBrushDictionary.Add(userId, brush);
         }
         return UsersBrushDictionary[userId];
@@ -73,13 +75,16 @@ public class BrushManager : Singleton<BrushManager>
         {
             P3D_Brush brush = new P3D_Brush();
             brush.Color = Color.green;
+            brush.Shape = DefaultBrush.Shape;
+            brush.Size = DefaultBrush.Size;
             UsersBrushDictionary.Add(userId, brush);
         }
         P3D_Brush userBrush = UsersBrushDictionary[userId];
 
+        userBrush.Shape = DefaultBrush.Shape;
         userBrush.Color = new Color(msg.ReadFloat(), msg.ReadFloat(), msg.ReadFloat(), msg.ReadFloat());
         userBrush.Size = new Vector2(msg.ReadFloat(), msg.ReadFloat());
 
-        UsersBrushDictionary.Add(userId, userBrush);
+        UsersBrushDictionary[userId] = userBrush;
     }
 }

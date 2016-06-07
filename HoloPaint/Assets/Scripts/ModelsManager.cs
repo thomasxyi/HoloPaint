@@ -105,7 +105,7 @@ public class ModelsManager : Singleton<ModelsManager>
         string instanceUid = msg.ReadString();
         if (!ActiveModelsDictionary.ContainsKey(new Guid(instanceUid)))
             return;
-        GameObject model = ActiveModelsDictionary[new Guid(instanceUid)];
+        GameObject model = ActiveModelsDictionary[uid];
 
         Vector3 uv = Messages.Instance.ReadVector3(msg);
 
