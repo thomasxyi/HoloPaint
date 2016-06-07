@@ -109,6 +109,11 @@ public class TexturePainter : MonoBehaviour
 
     public void ClearPaint()
     {
+        Paintbucket(Color.white);
+    }
+
+    public void Paintbucket(Color c)
+    {
         P3D_Paintable paintable = GetComponent<P3D_Paintable>();
         Material material = P3D_Helper.GetMaterial(this.gameObject, paintable.MaterialIndex);
 
@@ -118,7 +123,7 @@ public class TexturePainter : MonoBehaviour
 
             if (texture != null)
             {
-                P3D_Helper.ClearTexture(texture, Color.white, true);
+                P3D_Helper.ClearTexture(texture, c, true);
             }
         }
     }
