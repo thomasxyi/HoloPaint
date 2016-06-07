@@ -3,6 +3,7 @@
 
 using UnityEngine;
 using HoloToolkit.Unity;
+using System.Collections.Generic;
 
 /// <summary>
 /// CursorManager class takes Cursor GameObjects.
@@ -13,6 +14,13 @@ using HoloToolkit.Unity;
 /// </summary>
 public class CursorManager : Singleton<CursorManager>
 {
+
+    Vector3 navigStart;
+    bool isNavigating;
+
+    [Tooltip("Drag the Cursor object to show when it paints on a hologram.")]
+    public GameObject BrushCursor;
+
     [Tooltip("Drag the Cursor object to show when it hits a hologram.")]
     public GameObject CursorOnHolograms;
 
@@ -22,48 +30,81 @@ public class CursorManager : Singleton<CursorManager>
     [Tooltip("Distance, in meters, to offset the cursor from the collision point.")]
     public float DistanceFromCollision = 0.01f;
 
+    public Vector3 brushLocation;
+    public Vector3 brushDirection;
+    public bool onModel;
+    
+    private Dictionary<long, GameObject> uidToCursor = new Dictionary<long, GameObject>();
+    public GameObject localCursor;
+
     void Awake()
     {
-        if (CursorOnHolograms == null || CursorOffHolograms == null)
+        if (CursorOnHolograms == null || CursorOffHolograms == null || BrushCursor == null)
         {
             return;
         }
+
+        brushLocation = Vector3.zero;
+        brushLocation = Vector3.zero;
 
         // Hide the Cursors to begin with.
         CursorOnHolograms.SetActive(false);
         CursorOffHolograms.SetActive(false);
+        BrushCursor.SetActive(false);
+        onModel = false;
+        uidToCursor.Add(Messages.Instance.localUserID, localCursor);
+        //BrushManager.Instance.Cursor = localCursor;
     }
 
     void LateUpdate()
     {
-        if (GazeManager.Instance == null || CursorOnHolograms == null || CursorOffHolograms == null)
+        if (GazeManager.Instance == null || CursorOnHolograms == null || CursorOffHolograms == null || BrushCursor == null)
         {
             return;
         }
 
-        if (GazeManager.Instance.Hit)
+        // Decide which cursor to show up
+        if (((GazeManager.Instance.Hit && GazeManager.Instance.HitInfo.collider.gameObject != null &&
+            GazeManager.Instance.HitInfo.collider.gameObject.GetComponent<P3D_Paintable>() != null) ||
+            (GestureManager.Instance.getFocusedObject() != null && GestureManager.Instance.IsManipulating) ||
+            (onModel && GestureManager.Instance.IsManipulating)) &&
+            AppStateManager.Instance.CurrentAppState == AppStateManager.AppState.Drawing)
         {
-            CursorOnHolograms.SetActive(true);
+            BrushCursor.SetActive(true);
             CursorOffHolograms.SetActive(false);
+            CursorOnHolograms.SetActive(false);
         }
         else
         {
-            CursorOffHolograms.SetActive(true);
-            CursorOnHolograms.SetActive(false);
+            if (GazeManager.Instance.Hit)
+            {
+                CursorOnHolograms.SetActive(true);
+                CursorOffHolograms.SetActive(false);
+                BrushCursor.SetActive(false);
+            }
+            else
+            {
+                CursorOffHolograms.SetActive(true);
+                CursorOnHolograms.SetActive(false);
+                BrushCursor.SetActive(false);
+            }
         }
-        
 
         // Place the cursor at the calculated position.
-        if (GestureManager.Instance.IsManipulating)
+        if (!GestureManager.Instance.IsManipulating)
         {
-            CursorOnHolograms.SetActive(false);
-            CursorOffHolograms.SetActive(false);
-        }
-        else
-        {
+            //navigStart = GazeManager.Instance.HitInfo.point;
+            //isNavigating = false;
             this.gameObject.transform.position = GazeManager.Instance.Position + GazeManager.Instance.Normal * DistanceFromCollision;
+            // Orient the cursor to match the surface being gazed at.
+            this.gameObject.transform.up = GazeManager.Instance.Normal;
         }
-        // Orient the cursor to match the surface being gazed at.
-        gameObject.transform.up = GazeManager.Instance.Normal;
+        else if (AppStateManager.Instance.CurrentAppState == AppStateManager.AppState.Drawing && onModel)
+        {
+            //this.gameObject.transform.position = navigStart + GestureManager.Instance.ManipulationPosition * 2.0f;
+            this.gameObject.transform.position = this.brushLocation;
+            this.gameObject.transform.up = this.brushDirection;
+        }
+        
     }
 }

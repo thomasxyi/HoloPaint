@@ -7,7 +7,6 @@ public class ColorButton : MonoBehaviour
     {
         Color c = this.gameObject.GetComponent<Image>().color;
         BrushManager.Instance.SetColor(c);
-        BrushColorManager.Instance.ChangeColor(c);
     }
 }
 

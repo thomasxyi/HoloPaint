@@ -1,21 +1,18 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
-using System.Collections;
 using HoloToolkit.Unity;
-using UnityEngine.VR.WSA.Input;
 using System.Collections.Generic;
 using HoloToolkit.Sharing;
 
 public class BrushManager : Singleton<BrushManager>
 {
-    P3D_Brush LocalBrush;
-    public float StepSize = 1.0f;
+    public P3D_Brush DefaultBrush;
+    public P3D_Brush LocalBrush;
+    public float StepSize = 0.02f;
 
-    Dictionary<long, P3D_Brush> UsersBrushDictionary;
+    Dictionary<long, P3D_Brush> UsersBrushDictionary = new Dictionary<long, P3D_Brush>();
 
     void Start()
     {
-        UsersBrushDictionary = new Dictionary<long, P3D_Brush>();
         Messages.Instance.MessageHandlers[Messages.HoloPaintMessageID.UpdateBrush] = this.OnUpdateBrush;
     }
 
@@ -35,6 +32,11 @@ public class BrushManager : Singleton<BrushManager>
         return UsersBrushDictionary[userId];
     }
 
+    public float GetStepSize()
+    {
+        return System.Math.Min(StepSize * LocalBrush.Size.x, 1.0f);
+    }
+
     public void SetColor(Color c)
     {
         LocalBrush.Color = c;
@@ -43,6 +45,7 @@ public class BrushManager : Singleton<BrushManager>
 
     public void SetSize(Vector2 s)
     {
+        //TODO scale cursor by 0.1 every 20 steps
         LocalBrush.Size = s;
         UpdateGlobalBrush();
     }
@@ -51,7 +54,9 @@ public class BrushManager : Singleton<BrushManager>
     public void InitializeLocalBrush()
     {
         LocalBrush = new P3D_Brush();
-        LocalBrush.Color = Color.red;
+        LocalBrush.Color = DefaultBrush.Color;
+        LocalBrush.Shape = DefaultBrush.Shape;
+        LocalBrush.Size = DefaultBrush.Size;
         UsersBrushDictionary.Add(Messages.Instance.localUserID, LocalBrush);
         UpdateGlobalBrush();
     }
@@ -64,6 +69,12 @@ public class BrushManager : Singleton<BrushManager>
     void OnUpdateBrush(NetworkInMessage msg)
     {
         long userId = msg.ReadInt64();
+        if (!UsersBrushDictionary.ContainsKey(userId))
+        {
+            P3D_Brush brush = new P3D_Brush();
+            brush.Color = Color.green;
+            UsersBrushDictionary.Add(userId, brush);
+        }
         P3D_Brush userBrush = UsersBrushDictionary[userId];
 
         userBrush.Color = new Color(msg.ReadFloat(), msg.ReadFloat(), msg.ReadFloat(), msg.ReadFloat());

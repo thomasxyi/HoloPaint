@@ -1,12 +1,8 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
-using System.Collections;
 using HoloToolkit.Unity;
-using UnityEngine.VR.WSA.Input;
-using HoloToolkit.Sharing;
 using System;
 
-public class TexturePainter : Singleton<TexturePainter>
+public class TexturePainter : MonoBehaviour
 {
     public Guid uid { get; set; }
     bool navigating = false;
@@ -22,18 +18,6 @@ public class TexturePainter : Singleton<TexturePainter>
         OnSelect();
     }
 
-    void OnSelect()
-    {
-        if (AppStateManager.Instance.CurrentAppState != AppStateManager.AppState.Drawing)
-            return;
-        Vector3 startPos = Vector3.zero;
-        Vector3 endPos = Vector3.zero;
-        if (HitTestPosition(ref startPos, ref endPos))
-        {
-            PaintWorldCoordinates(startPos, endPos, BrushManager.Instance.GetLocalBrush());
-        }
-    }
-
     //The main action, instantiates a brush or decal entity at the clicked position on the UV map
     void PaintWorldCoordinates(Vector3 startPos, Vector3 endPos, P3D_Brush brush)
     {
@@ -46,8 +30,68 @@ public class TexturePainter : Singleton<TexturePainter>
         painter.ModelGUID = this.uid;
 
         // Paint at the hit coordinate
-        // TODO PaintBetweenAll not working, will only draw 2 points
-        painter.PaintNearest(endPos, 1.0f);
+        if (startPos == endPos)
+        {
+            var hit = default(RaycastHit);
+            Vector3 origin = Camera.main.transform.position;
+
+            // Raycast into the 3D scene
+            if (Physics.Raycast(origin, endPos - origin, out hit, 10.0f))
+            {
+                if (hit.collider.gameObject != null && hit.collider.gameObject.GetComponent<P3D_Paintable>() != null)
+                {
+                    CursorManager.Instance.brushDirection = hit.normal;
+                    CursorManager.Instance.onModel = true;
+                    CursorManager.Instance.brushLocation = hit.point + hit.normal * 0.01f;
+                    painter.Paint(hit.textureCoord);
+                }
+                else {
+                    CursorManager.Instance.onModel = false;
+                }
+            }
+            else {
+                CursorManager.Instance.onModel = false;
+                CursorManager.Instance.onModel = false;
+            }
+        }
+        else
+        {
+            var startHit = default(RaycastHit);
+            var endHit = default(RaycastHit);
+            Vector3 origin = Camera.main.transform.position;
+
+            // Raycast into the 3D scene
+            if (Physics.Raycast(origin, startPos - origin, out startHit, 10.0f) && Physics.Raycast(origin, endPos - origin, out endHit, 10.0f))
+            {
+                if (startHit.collider.gameObject != null && startHit.collider.gameObject.GetComponent<P3D_Paintable>() != null &&
+                    endHit.collider.gameObject != null && endHit.collider.gameObject.GetComponent<P3D_Paintable>() != null)
+                {
+                    CursorManager.Instance.brushDirection = endHit.normal;
+                    CursorManager.Instance.brushLocation = endHit.point + endHit.normal * 0.01f;
+                    CursorManager.Instance.onModel = true;
+                    Vector2 startUV = startHit.textureCoord;
+                    Vector2 endUV = endHit.textureCoord;
+                    if (Vector3.Distance(startPos, endPos) > Vector2.Distance(startUV, endUV))
+                    {
+                        var stepCount = Vector2.Distance(startUV, endUV) / BrushManager.Instance.GetStepSize() + 1;
+
+                        for (var i = 0; i < stepCount; i++)
+                        {
+                            var subUV = Vector2.Lerp(startUV, endUV, i / stepCount);
+
+                            painter.Paint(subUV);
+                        }
+                    }
+                }
+                else
+                {
+                    CursorManager.Instance.onModel = false;
+                }
+            }
+            else {
+                CursorManager.Instance.onModel = false;
+            }
+        }
 
         painter.ModelGUID = Guid.Empty; // makes sure there's no more synchronization
     }
@@ -82,31 +126,36 @@ public class TexturePainter : Singleton<TexturePainter>
     // Update is called once per frame
     void Update()
     {
-        if (!GestureManager.Instance.IsManipulating)
+        if (AppStateManager.Instance.CurrentAppState == AppStateManager.AppState.Drawing && !GestureManager.Instance.IsManipulating)
         {
             navigStart = GazeManager.Instance.HitInfo.point;
             navigating = false;
+            GestureManager.Instance.OverrideFocusedObject = null;
+        }
+    }
+
+    void OnSelect()
+    {
+        if (AppStateManager.Instance.CurrentAppState != AppStateManager.AppState.Drawing)
+            return;
+        Vector3 startPos = Vector3.zero;
+        Vector3 endPos = Vector3.zero;
+        if (HitTestPosition(ref startPos, ref endPos))
+        {
+            PaintWorldCoordinates(startPos, endPos, BrushManager.Instance.GetLocalBrush());
         }
     }
 
     //Returns the position on the texuremap according to a hit in the mesh collider
     public bool HitTestPosition(ref Vector3 startPos, ref Vector3 endPos)
     {
-        if (!GestureManager.Instance.IsManipulating)
-        {
-            // user released navigation gesture
-            // reset drawing
-            navigating = false;
-            GestureManager.Instance.OverrideFocusedObject = null;
-        }
-
         if (navigating)
         {
             // user is drawing currently
             // draw based on saved gaze position
-            //startPos = lastDrawn;
+            startPos = lastDrawn;
             endPos = navigStart + GestureManager.Instance.ManipulationPosition * 2.0f;
-            //lastDrawn = endPos;
+            lastDrawn = endPos;
         }
         else if (GazeManager.Instance.Hit)
         {
@@ -118,9 +167,9 @@ public class TexturePainter : Singleton<TexturePainter>
                 GestureManager.Instance.OverrideFocusedObject = this.gameObject;
             }
             RaycastHit hit = GazeManager.Instance.HitInfo;
-            //startPos = hit.point;
+            startPos = hit.point;
             endPos = hit.point;
-            //lastDrawn = hit.point;
+            lastDrawn = hit.point;
         }
         else
         {

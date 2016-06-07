@@ -8,12 +8,13 @@ public class HologramRotation : Singleton<HologramRotation>
     /// The anchor model is rendererd relative to the actual anchor.
     /// </summary>
     public bool Placed { get; private set; }
+    long Reset = 360;
 
     Vector3 rotation;
-    Vector3 lastRotate;
 
     void Start()
     {
+        Reset = 360;
         Placed = true;
         rotation = Vector3.zero;
     }
@@ -22,8 +23,16 @@ public class HologramRotation : Singleton<HologramRotation>
     {
         if ((AppStateManager.Instance.CurrentAppState == AppStateManager.AppState.Rotation) && (Placed == false))
         {
-            if (GestureManager.Instance.IsManipulating) {
-                Vector3 angles = transform.rotation.eulerAngles;
+            Vector3 angles = transform.rotation.eulerAngles;
+            if (Reset > 0)
+            {
+                Reset -= 30;
+                angles.y += 30;
+                transform.eulerAngles = angles;
+                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(angles), Time.deltaTime);
+            }
+            else if (GestureManager.Instance.IsManipulating)
+            {
                 float x = System.Math.Abs(rotation.x);
                 float y = System.Math.Abs(rotation.y);
                 if (x > y)
@@ -63,6 +72,7 @@ public class HologramRotation : Singleton<HologramRotation>
             // if not placed already, place the game object
             GestureManager.Instance.OverrideFocusedObject = (Placed ? this.gameObject : null);
             rotation = Vector3.zero;
+            Reset = 360;
             Placed = !Placed;
         }
     }
@@ -71,6 +81,7 @@ public class HologramRotation : Singleton<HologramRotation>
     {
         if (AppStateManager.Instance.CurrentAppState == AppStateManager.AppState.Rotation)
         {
+            Reset = 0;
             rotation = GestureManager.Instance.ManipulationPosition;
         }
     }
