@@ -150,13 +150,19 @@ public class TexturePainter : MonoBehaviour
 
     void OnSelect()
     {
-        if (AppStateManager.Instance.CurrentAppState != AppStateManager.AppState.Drawing)
-            return;
-        Vector3 startPos = Vector3.zero;
-        Vector3 endPos = Vector3.zero;
-        if (HitTestPosition(ref startPos, ref endPos))
+        if (AppStateManager.Instance.CurrentAppState == AppStateManager.AppState.Drawing)
         {
-            PaintWorldCoordinates(startPos, endPos, BrushManager.Instance.GetLocalBrush());
+            Vector3 startPos = Vector3.zero;
+            Vector3 endPos = Vector3.zero;
+            if (HitTestPosition(ref startPos, ref endPos))
+            {
+                PaintWorldCoordinates(startPos, endPos, BrushManager.Instance.GetLocalBrush());
+            }
+        }
+        else if (AppStateManager.Instance.CurrentAppState == AppStateManager.AppState.Paintbucket)
+        {
+            Paintbucket(BrushManager.Instance.LocalBrush.Color);
+            Messages.Instance.SendPaintbucket(this.uid, BrushManager.Instance.LocalBrush.Color);
         }
     }
 

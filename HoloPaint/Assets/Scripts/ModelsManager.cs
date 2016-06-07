@@ -103,7 +103,8 @@ public class ModelsManager : Singleton<ModelsManager>
         P3D_Brush userBrush = BrushManager.Instance.GetGlobalBrush(userId);
 
         string instanceUid = msg.ReadString();
-        if (!ActiveModelsDictionary.ContainsKey(new Guid(instanceUid)))
+        Guid uid = new Guid(instanceUid);
+        if (!ActiveModelsDictionary.ContainsKey(uid))
             return;
         GameObject model = ActiveModelsDictionary[uid];
 
