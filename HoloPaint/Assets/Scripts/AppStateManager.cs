@@ -15,7 +15,8 @@ public class AppStateManager : Singleton<AppStateManager>
         Placement,
         Rotation,
         Drawing,
-        Paintbucket
+        Paintbucket,
+        ClearPaint
     }
 
     /// <summary>

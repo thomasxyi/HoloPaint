@@ -113,6 +113,15 @@ public class ModelsManager : Singleton<ModelsManager>
         model.GetComponent<TexturePainter>().PaintUVCoordinates(uv, userBrush);
     }
 
+    public void ResetDefaultModelsTransform()
+    {
+        GameObject defaultModels = GameObject.FindGameObjectWithTag("DefaultModels");
+        defaultModels.BroadcastMessage("ResetToStartingTransform");
+        Vector3 centered = Camera.main.transform.position;
+        centered.z = defaultModels.transform.position.z;
+        defaultModels.transform.position = centered;
+    }
+
     public void InstantiateHologram(string name)
     {
         Guid uid = Guid.NewGuid();
@@ -145,8 +154,9 @@ public class ModelsManager : Singleton<ModelsManager>
         GameObject menu = GameObject.FindGameObjectWithTag("Menu");
         Vector3 spawnPos = menu.transform.TransformPoint(Vector3.back / 2);
         GameObject hologram = Instantiate(PrefabModelsDictionary[name], spawnPos, Quaternion.identity) as GameObject;
+        GameObject parent = GameObject.FindGameObjectWithTag("InstantiatedModels");
 
-        hologram.transform.SetParent(this.transform, true);
+        hologram.transform.SetParent(parent.transform, true);
 
         // Save the uid
         hologram.GetComponent<TexturePainter>().uid = uid;
