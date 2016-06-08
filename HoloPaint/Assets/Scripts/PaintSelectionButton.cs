@@ -14,23 +14,24 @@ public class PaintSelectionButton : MonoBehaviour
     public void OnSelect()
     {
         this.gameObject.GetComponent<AudioSource>().Play();
-        PaintSelectionButton[] children  = this.gameObject.GetComponentsInChildren<PaintSelectionButton>();
-        foreach (var child in children) 
+        if (level >= 0)
         {
-           if((child.level == this.level + 1) || (isSet && child.level != this.level))
+            PaintSelectionButton[] children = this.gameObject.GetComponentsInChildren<PaintSelectionButton>();
+            foreach (var child in children)
             {
-                child.gameObject.GetComponent<Image>().enabled = !isSet;
-                Text t = child.gameObject.GetComponentInChildren<Text>();
-                if (t != null)
+                if ((child.level == this.level + 1) || (isSet && child.level != this.level))
                 {
-                    t.enabled = !isSet;
-                }              
-                child.gameObject.GetComponent<BoxCollider>().enabled = !isSet;
-            }
-                                   
-        }
-        isSet = !isSet;
-        
+                    child.gameObject.GetComponent<Image>().enabled = !isSet;
+                    Text t = child.gameObject.GetComponentInChildren<Text>();
+                    if (t != null)
+                    {
+                        t.enabled = !isSet;
+                    }
+                    child.gameObject.GetComponent<BoxCollider>().enabled = !isSet;
+                }
 
+            }
+            isSet = !isSet;
+        }
     }
 }

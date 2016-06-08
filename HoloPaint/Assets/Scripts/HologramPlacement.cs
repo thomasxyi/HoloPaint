@@ -21,12 +21,6 @@ public class HologramPlacement : Singleton<HologramPlacement>
 
     void Update()
     {
-        // make all non paintable objects face the camera
-        if (this.gameObject.GetComponent<P3D_Paintable>() == null)
-        {
-            gameObject.transform.LookAt(gameObject.transform.position * 2 - Camera.main.transform.position);
-        }
-
         if ((AppStateManager.Instance.CurrentAppState == AppStateManager.AppState.Placement) && (Placed == false))
         {
             // if not paintable make it face the user

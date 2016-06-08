@@ -90,7 +90,15 @@ public class CursorManager : Singleton<CursorManager>
         {
             //navigStart = GazeManager.Instance.HitInfo.point;
             //isNavigating = false;
-            this.gameObject.transform.position = GazeManager.Instance.Position + GazeManager.Instance.Normal * DistanceFromCollision;
+
+            if (GazeManager.Instance.HitInfo.collider.gameObject != null && GazeManager.Instance.HitInfo.collider.gameObject.GetComponent<P3D_Paintable>() == null)
+            {
+                this.gameObject.transform.position = GazeManager.Instance.Position + GazeManager.Instance.Normal * 0.1f;
+            }
+            else
+            {
+                this.gameObject.transform.position = GazeManager.Instance.Position + GazeManager.Instance.Normal * DistanceFromCollision;
+            }
             // Orient the cursor to match the surface being gazed at.
             this.gameObject.transform.up = GazeManager.Instance.Normal;
         }
