@@ -7,5 +7,6 @@ public class RotateButton : MonoBehaviour
         // change app state
         AppStateManager.Instance.CurrentAppState = AppStateManager.AppState.Rotation;
         ModeIndicator.Instance.setText("Current Mode: Rotation\nPinch to Select / Unselect\nScroll to change orientation");
+        ModeIndicator.Instance.setActive(5.0f, true);
     }
 }

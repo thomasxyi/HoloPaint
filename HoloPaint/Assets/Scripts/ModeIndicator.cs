@@ -3,32 +3,75 @@ using System.Collections;
 using HoloToolkit.Unity;
 
 public class ModeIndicator : Singleton<ModeIndicator> {
-    float time = 10.0f;
+    public GameObject help;
+    public GameObject temp;
+
+    float helpC = 5.0f;
+    float tempC = 0.0f;
     
     public void Start()
     {
-        this.gameObject.GetComponentInChildren<TextMesh>().text = "Current Mode: Painting\nPinch and Drag to start Drawing";
-    }
-
-    public void setActive() {
-        time = 10.0f;
+        help.GetComponentInChildren<TextMesh>().text = "Current Mode: Painting\nPinch and Drag to start Drawing";
+        help.SetActive(false);
+        temp.SetActive(false);
     }
 
     public void Update() {
-        float val = Time.deltaTime;
-        if (time >= 0.0f)
+        if (helpC > 0.0f && !temp.activeInHierarchy)
         {
-            time -= val;
-            this.gameObject.SetActive(true);
+            helpC -= Time.deltaTime;
+            help.SetActive(true);
         }
         else
         {
-            time = 0.0f;
-            this.gameObject.SetActive(false);
+            help.SetActive(false);
+        }
+
+        if (tempC > 0.0f)
+        {
+            tempC -= Time.deltaTime;
+            temp.SetActive(true);
+        }
+        else
+        {
+            temp.SetActive(false);
+            // no flickering when switching
+            if (helpC > 0.0f)
+            {
+                helpC -= Time.deltaTime;
+                help.SetActive(true);
+            }
         }
     }
 
-    public void setText(string text) {
-        this.gameObject.GetComponentInChildren<TextMesh>().text = text;
+    public void setText(string text)
+    {
+        help.GetComponentInChildren<TextMesh>().text = text;
+        temp.GetComponentInChildren<TextMesh>().text = text;
+    }
+
+    public void setText(string text, bool val) {
+        if (val)
+        {
+            temp.GetComponentInChildren<TextMesh>().text = text;
+        }
+        else
+        {
+            help.GetComponentInChildren<TextMesh>().text = text;
+        }
+    }
+
+    public void setActive(float time, bool val)
+    {
+        if (val)
+        {
+            tempC = time;
+            helpC = 0.0f;
+        }
+        else
+        {
+            helpC = time;
+            tempC = 0.0f;
+        }
     }
 }

@@ -8,6 +8,7 @@ public class TexturePainter : MonoBehaviour
     bool navigating = false;
     Vector3 lastDrawn;
     Vector3 navigStart;
+    float scale = 1.0f;
 
     void Start()
     {
@@ -174,7 +175,7 @@ public class TexturePainter : MonoBehaviour
             // user is drawing currently
             // draw based on saved gaze position
             startPos = lastDrawn;
-            endPos = navigStart + GestureManager.Instance.ManipulationPosition * 2.0f;
+            endPos = navigStart + GestureManager.Instance.ManipulationPosition * 2.5f * (System.Math.Max(0.8f, scale));
             lastDrawn = endPos;
         }
         else if (GazeManager.Instance.Hit)
@@ -185,6 +186,7 @@ public class TexturePainter : MonoBehaviour
                 // save current gaze focus
                 navigating = true;
                 GestureManager.Instance.OverrideFocusedObject = this.gameObject;
+                scale = (GazeManager.Instance.Position - Camera.main.transform.position).magnitude / 5.0f;
             }
             RaycastHit hit = GazeManager.Instance.HitInfo;
             startPos = hit.point;

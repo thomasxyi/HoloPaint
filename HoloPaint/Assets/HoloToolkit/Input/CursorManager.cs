@@ -96,7 +96,6 @@ public class CursorManager : Singleton<CursorManager>
         }
         else if (AppStateManager.Instance.CurrentAppState == AppStateManager.AppState.Drawing && onModel)
         {
-            //this.gameObject.transform.position = navigStart + GestureManager.Instance.ManipulationPosition * 2.0f;
             this.gameObject.transform.position = this.brushLocation;
             this.gameObject.transform.up = this.brushDirection;
         }

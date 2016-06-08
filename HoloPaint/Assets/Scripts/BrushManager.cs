@@ -8,6 +8,10 @@ public class BrushManager : Singleton<BrushManager>
     public P3D_Brush DefaultBrush;
     public P3D_Brush LocalBrush;
     public float StepSize = 0.02f;
+    public float maxBrushSize = 50.0f;
+    public float minBrushSize = 7.5f;
+    public float minCursorScale = 0.1f;
+
 
     Dictionary<long, P3D_Brush> UsersBrushDictionary = new Dictionary<long, P3D_Brush>();
 
