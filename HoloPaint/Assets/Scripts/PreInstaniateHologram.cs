@@ -5,8 +5,15 @@ public class PreInstaniateHologram : MonoBehaviour {
 
     public string ReservedUID;
 
+    Vector3 StaringPosition;
+    Quaternion StartingRotation;
+    Vector3 StaringScale;
+
 	// Use this for initialization
 	void Start () {
+        StaringPosition = this.transform.localPosition;
+        StartingRotation = this.transform.localRotation;
+        StaringScale = this.transform.localScale;
         Guid uid = Guid.NewGuid();
         if (ReservedUID != null)
         {
@@ -20,5 +27,12 @@ public class PreInstaniateHologram : MonoBehaviour {
             ModelsManager.Instance.ActiveModelsDictionary.Add(uid, this.gameObject);
         }
         GetComponent<TexturePainter>().uid = uid;
+    }
+
+    public void ResetToStartingTransform()
+    {
+        this.transform.localPosition = StaringPosition;
+        this.transform.localRotation = StartingRotation;
+        this.transform.localScale = StaringScale;
     }
 }
