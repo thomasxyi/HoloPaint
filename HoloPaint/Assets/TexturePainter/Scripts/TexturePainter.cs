@@ -164,6 +164,10 @@ public class TexturePainter : MonoBehaviour
         {
             Paintbucket(BrushManager.Instance.LocalBrush.Color);
             Messages.Instance.SendPaintbucket(this.uid, BrushManager.Instance.LocalBrush.Color);
+        } else if (AppStateManager.Instance.CurrentAppState == AppStateManager.AppState.ClearPaint)
+        {
+            ClearPaint();
+            Messages.Instance.SendClearPaint(this.uid);
         }
     }
 
