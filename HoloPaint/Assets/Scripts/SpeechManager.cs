@@ -11,20 +11,10 @@ public class SpeechManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        keywords.Add("Reset world", () =>
+        keywords.Add("Open menu", () =>
         {
             // Call the OnReset method on every descendant object.
-            this.BroadcastMessage("OnReset");
-        });
-
-        keywords.Add("Drop Sphere", () =>
-        {
-            var focusObject = GazeGestureManager.Instance.FocusedObject;
-            if (focusObject != null)
-            {
-                // Call the OnDrop method on just the focused object.
-                focusObject.SendMessage("OnDrop");
-            }
+            GameObject.FindGameObjectWithTag("Menu").GetComponent<MenuColliderScript>().OnOpenCommand();
         });
 
         // Tell the KeywordRecognizer about our keywords.
