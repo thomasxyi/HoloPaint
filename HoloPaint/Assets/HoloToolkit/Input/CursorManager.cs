@@ -17,6 +17,7 @@ public class CursorManager : Singleton<CursorManager>
 
     Vector3 navigStart;
     bool isNavigating;
+    public bool onMenu;
 
     [Tooltip("Drag the Cursor object to show when it paints on a hologram.")]
     public GameObject BrushCursor;
@@ -49,6 +50,7 @@ public class CursorManager : Singleton<CursorManager>
         CursorOffHolograms.SetActive(false);
         BrushCursor.SetActive(false);
         onModel = false;
+        onMenu = false;
     }
 
     void LateUpdate()
@@ -68,11 +70,29 @@ public class CursorManager : Singleton<CursorManager>
             BrushCursor.SetActive(true);
             CursorOffHolograms.SetActive(false);
             CursorOnHolograms.SetActive(false);
+            onMenu = false;
         }
         else
         {
             if (GazeManager.Instance.Hit)
             {
+                if (GazeManager.Instance.HitInfo.collider != null && GazeManager.Instance.HitInfo.collider.gameObject != null && GazeManager.Instance.HitInfo.collider.gameObject.GetComponent<P3D_Paintable>() == null)
+                {
+                    PaintSelectionButton b = GazeManager.Instance.HitInfo.collider.gameObject.GetComponent<PaintSelectionButton>();
+
+                    if (b != null)
+                    {
+                        onMenu = true;
+                        b.highlight();
+                    }
+                    else {
+                        onMenu = false;
+                    }
+                }
+                else
+                {
+                    onMenu = false;
+                }
                 CursorOnHolograms.SetActive(true);
                 CursorOffHolograms.SetActive(false);
                 BrushCursor.SetActive(false);
@@ -82,6 +102,7 @@ public class CursorManager : Singleton<CursorManager>
                 CursorOffHolograms.SetActive(true);
                 CursorOnHolograms.SetActive(false);
                 BrushCursor.SetActive(false);
+                onMenu = false;
             }
         }
 
@@ -90,15 +111,9 @@ public class CursorManager : Singleton<CursorManager>
         {
             //navigStart = GazeManager.Instance.HitInfo.point;
             //isNavigating = false;
+            
+            this.gameObject.transform.position = GazeManager.Instance.Position + GazeManager.Instance.Normal * DistanceFromCollision;
 
-            if (GazeManager.Instance.HitInfo.collider != null && GazeManager.Instance.HitInfo.collider.gameObject != null && GazeManager.Instance.HitInfo.collider.gameObject.GetComponent<P3D_Paintable>() == null)
-            {
-                this.gameObject.transform.position = GazeManager.Instance.Position + GazeManager.Instance.Normal * 0.1f;
-            }
-            else
-            {
-                this.gameObject.transform.position = GazeManager.Instance.Position + GazeManager.Instance.Normal * DistanceFromCollision;
-            }
             // Orient the cursor to match the surface being gazed at.
             this.gameObject.transform.up = GazeManager.Instance.Normal;
         }

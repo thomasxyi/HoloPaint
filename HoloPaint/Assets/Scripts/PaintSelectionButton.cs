@@ -10,6 +10,7 @@ public class PaintSelectionButton : MonoBehaviour
 {
     public bool isSet;
     public int level;
+    bool changed = false;
 
     public void OnSelect()
     {
@@ -32,6 +33,21 @@ public class PaintSelectionButton : MonoBehaviour
 
             }
             isSet = !isSet;
+        }
+    }
+
+    public void highlight()
+    {
+        if (GetComponent<ColorButton>() == null) {
+            GetComponent<Image>().color = new Color(255, 50, 0);
+            changed = true;
+        }
+    }
+
+    public void Update()
+    {
+        if (!CursorManager.Instance.onMenu && changed && GetComponent<ColorButton>() == null) {
+            GetComponent<Image>().color = new Color(243, 217, 178);
         }
     }
 }
