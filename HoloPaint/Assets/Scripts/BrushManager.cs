@@ -7,8 +7,8 @@ public class BrushManager : Singleton<BrushManager>
 {
     public P3D_Brush DefaultBrush;
     public P3D_Brush LocalBrush;
-    public float StepSize = 0.02f;
-    public float maxBrushSize = 50.0f;
+    public float StepSize = 0.01f;
+    public float maxBrushSize = 75.0f;
     public float minBrushSize = 7.5f;
     public float minCursorScale = 0.1f;
 

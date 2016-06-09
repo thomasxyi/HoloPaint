@@ -10,10 +10,10 @@ public class BrushSizeSmaller : MonoBehaviour {
         if (currentSize.x > BrushManager.Instance.minBrushSize && currentSize.y > BrushManager.Instance.minBrushSize
             && scale.x > BrushManager.Instance.minCursorScale && scale.y > BrushManager.Instance.minCursorScale)
         {
-            currentSize.x -= 7.5f;
-            currentSize.y -= 7.5f;
-            scale.x -= 0.1f;
-            scale.y -= 0.1f;
+            currentSize.x -= BrushManager.Instance.minBrushSize;
+            currentSize.y -= BrushManager.Instance.minBrushSize;
+            scale.x -= BrushManager.Instance.minCursorScale;
+            scale.y -= BrushManager.Instance.minCursorScale;
             CursorManager.Instance.BrushCursor.transform.localScale = scale;
             BrushManager.Instance.SetSize(currentSize);
 

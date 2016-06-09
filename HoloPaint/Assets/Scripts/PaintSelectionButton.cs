@@ -10,10 +10,19 @@ public class PaintSelectionButton : MonoBehaviour
 {
     public bool isSet;
     public int level;
+    bool changed = false;
+    Color defColor = Color.white;
+
+    public void Start() {
+        if (GetComponent<Image>() != null && GetComponent<ColorButton>() == null)
+        {
+            defColor = GetComponent<Image>().color;
+        }
+    }
 
     public void OnSelect()
     {
-        this.gameObject.GetComponent<AudioSource>().Play();
+        gameObject.GetComponent<AudioSource>().Play();
         if (level >= 0)
         {
             PaintSelectionButton[] children = this.gameObject.GetComponentsInChildren<PaintSelectionButton>();
@@ -32,6 +41,21 @@ public class PaintSelectionButton : MonoBehaviour
 
             }
             isSet = !isSet;
+        }
+    }
+
+    public void highlight()
+    {
+        if (defColor != Color.white) {
+            GetComponent<Image>().color = new Color(255, 50, 0);
+            changed = true;
+        }
+    }
+
+    public void Update()
+    {
+        if (!CursorManager.Instance.onMenu && changed && defColor != Color.white) {
+            GetComponent<Image>().color = defColor;
         }
     }
 }
