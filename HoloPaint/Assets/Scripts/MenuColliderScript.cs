@@ -2,19 +2,21 @@
 using System.Collections;
 using HoloToolkit.Unity;
 
-public class MenuColliderScript : MonoBehaviour
+public class MenuColliderScript : Singleton<MenuColliderScript>
 {
 
     Vector3 pos = Vector3.zero;
+    public bool opened = false;
 
     public void OnOpenCommand()
     {
         pos = Camera.main.transform.position + Camera.main.transform.forward * 1.75f;
+        opened = true;
     }
 
     void Update()
     {
-        if (pos != Vector3.zero && AppStateManager.Instance.CurrentAppState != AppStateManager.AppState.Placement)
+        if (pos != Vector3.zero && opened)
         {
             if (Vector3.Distance(this.gameObject.transform.position, pos) > 0.001f)
             {

@@ -30,7 +30,7 @@ public class BrushManager : Singleton<BrushManager>
         if (!UsersBrushDictionary.ContainsKey(userId))
         {
             P3D_Brush brush = new P3D_Brush();
-            brush.Color = Color.green;
+            brush.Color = DefaultBrush.Color;
             brush.Shape = DefaultBrush.Shape;
             brush.Size = DefaultBrush.Size;
             UsersBrushDictionary.Add(userId, brush);
@@ -78,7 +78,7 @@ public class BrushManager : Singleton<BrushManager>
         if (!UsersBrushDictionary.ContainsKey(userId))
         {
             P3D_Brush brush = new P3D_Brush();
-            brush.Color = Color.green;
+            brush.Color = DefaultBrush.Color;
             brush.Shape = DefaultBrush.Shape;
             brush.Size = DefaultBrush.Size;
             UsersBrushDictionary.Add(userId, brush);

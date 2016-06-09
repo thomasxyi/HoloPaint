@@ -53,6 +53,7 @@ public class HologramPlacement : Singleton<HologramPlacement>
             Manip = Vector3.zero;
             Reset = Placed;
             Placed = !Placed;
+            MenuColliderScript.Instance.opened = false;
         }
     }
 
