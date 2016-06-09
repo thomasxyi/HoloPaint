@@ -91,7 +91,7 @@ public class CursorManager : Singleton<CursorManager>
             //navigStart = GazeManager.Instance.HitInfo.point;
             //isNavigating = false;
 
-            if (GazeManager.Instance.HitInfo.collider.gameObject != null && GazeManager.Instance.HitInfo.collider.gameObject.GetComponent<P3D_Paintable>() == null)
+            if (GazeManager.Instance.HitInfo.collider != null && GazeManager.Instance.HitInfo.collider.gameObject != null && GazeManager.Instance.HitInfo.collider.gameObject.GetComponent<P3D_Paintable>() == null)
             {
                 this.gameObject.transform.position = GazeManager.Instance.Position + GazeManager.Instance.Normal * 0.1f;
             }

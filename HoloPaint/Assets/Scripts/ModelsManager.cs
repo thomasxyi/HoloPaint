@@ -118,7 +118,7 @@ public class ModelsManager : Singleton<ModelsManager>
         GameObject defaultModels = GameObject.FindGameObjectWithTag("DefaultModels");
         defaultModels.BroadcastMessage("ResetToStartingTransform");
         Vector3 centered = Camera.main.transform.position;
-        centered.z = defaultModels.transform.position.z;
+        centered.y = defaultModels.transform.position.y;
         defaultModels.transform.position = centered;
     }
 
