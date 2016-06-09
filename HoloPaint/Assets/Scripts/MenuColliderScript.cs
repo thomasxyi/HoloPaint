@@ -14,7 +14,7 @@ public class MenuColliderScript : MonoBehaviour
 
     void Update()
     {
-        if (pos != Vector3.zero)
+        if (pos != Vector3.zero && AppStateManager.Instance.CurrentAppState != AppStateManager.AppState.Placement)
         {
             if (Vector3.Distance(this.gameObject.transform.position, pos) > 0.001f)
             {
