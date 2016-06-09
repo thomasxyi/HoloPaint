@@ -7,7 +7,7 @@ public class BrushManager : Singleton<BrushManager>
 {
     public P3D_Brush DefaultBrush;
     public P3D_Brush LocalBrush;
-    public float StepSize = 0.01f;
+    public float StepSize = 0.001f;
     public float maxBrushSize = 75.0f;
     public float minBrushSize = 7.5f;
     public float minCursorScale = 0.1f;
@@ -40,7 +40,7 @@ public class BrushManager : Singleton<BrushManager>
 
     public float GetStepSize()
     {
-        return System.Math.Min(StepSize * LocalBrush.Size.x, 1.0f);
+        return System.Math.Min(StepSize * LocalBrush.Size.x * LocalBrush.Size.x, 1.0f);
     }
 
     public void SetColor(Color c)
