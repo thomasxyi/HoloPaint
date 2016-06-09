@@ -16,12 +16,12 @@ public class MenuColliderScript : MonoBehaviour
     {
         if (pos != Vector3.zero)
         {
-            this.gameObject.transform.position = Vector3.Lerp(transform.position, pos, 0.2f);
-        }
+            if (Vector3.Distance(this.gameObject.transform.position, pos) > 0.001f)
+            {
+                gameObject.transform.LookAt(gameObject.transform.position * 2 - Camera.main.transform.position);
+            }
 
-        if (Vector3.Distance(this.gameObject.transform.position, pos) > 0.001f)
-        {
-            gameObject.transform.LookAt(gameObject.transform.position * 2 - Camera.main.transform.position);
+            this.gameObject.transform.position = Vector3.Lerp(transform.position, pos, 0.2f);
         }
 
         if (AppStateManager.Instance.CurrentAppState == AppStateManager.AppState.Placement)
