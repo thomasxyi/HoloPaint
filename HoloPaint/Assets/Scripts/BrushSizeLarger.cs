@@ -8,11 +8,11 @@ public class BrushSizeLarger : MonoBehaviour {
         Vector2 currentSize = BrushManager.Instance.GetLocalBrush().Size;
         if (currentSize.x < BrushManager.Instance.maxBrushSize && currentSize.y < BrushManager.Instance.maxBrushSize)
         {
-            currentSize.x += 7.5f;
-            currentSize.y += 7.5f;
+            currentSize.x += BrushManager.Instance.minBrushSize;
+            currentSize.y += BrushManager.Instance.minBrushSize;
             Vector3 scale = CursorManager.Instance.BrushCursor.transform.localScale;
-            scale.x += 0.1f;
-            scale.y += 0.1f;
+            scale.x += BrushManager.Instance.minCursorScale;
+            scale.y += BrushManager.Instance.minCursorScale;
             CursorManager.Instance.BrushCursor.transform.localScale = scale;
             BrushManager.Instance.SetSize(currentSize);
 
