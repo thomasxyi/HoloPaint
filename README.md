@@ -1,3 +1,5 @@
+Microsoft Hololens Application made in 10 weeks for the Virtual and Augmented Reality Capstone Course at the University of Washington (CSE 481V)
+
 Steps to run:
 
 Open Unity scene named "final"
