@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Week 7</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/clean-blog.min.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">Holo Paint</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="index.html">Home</a>
+                    </li>
+                    <li>
+                        <a href="about.html">About</a>
+                    </li>
+                    <!-- <li>
+                        <a href="post.html">Sample Post</a>
+                    </li> -->
+                    <li>
+                        <a href="contact.html">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Header -->
+    <!-- Set your background image for this header on the line below. -->
+    <header class="intro-header" style="background-image: url('img/week3.png')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>Week 7 Update</h1>
+                        <!-- <h2 class="subheading">Problems look mighty small from 150 miles up</h2> -->
+                        <span class="meta">May 12, 2016</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Post Content -->
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+
+     <h3>Intro</h3>
+<p>This week’s work was mainly concentrated on better painting functionality, more sharing between devices, and preparing for the presentation as well as revising our project according to the feedback we received.</p>
+
+<h3>Progress</h3>
+<p>
+In terms of painting functionality, the application is now able to adjust the brush sizes and have more precise hand gesture control. Brush sizes can now be adjusted smaller or larger and painted sprites are now sent to other users with a specific size to reflect the sprite size on other user instances. For the gesture control, with the help of Aditya, we found that the Manipulation event is much more precise for drawing when compared to the Navigation Event since Navigation has acceleration built in which corresponds to the user’s hand movement speed. With these 2 features, the user is now able to draw much more precisely.
+</p>
+
+<p>
+The most important progress of this week is the change in our application direction. After reflecting on our demo feedback, we decided to change our application to enable painting on 3D holograms rather than just on a 3D board. This was inspired by our initial thoughts of adding templates to the whiteboard in which users can color in, similar to a coloring book. Though since our board was already 3D, we thought that it might be even better to just use a 3D template in the form of a hologram and do away with the whiteboard. Steven and Ira approved of this idea during our 1:1 and we will send out revisions to the PRD once we figure out what features we should trim and include (likely before next week’s 1:1).
+</p>
+
+<p>Currently, our work is split up as such.</p>
+
+<p>Radu is working on a better UI buttons, sound and animations for the menu</p>
+
+<p>Panji is working on making holograms paintable by the painting module and an undo/redo button</p>
+
+<p>Andy is working on smoother gesture manipulation and sharing textures for users joining an existing session</p>
+
+<p>Thomas is working on clearing drawn items, displaying all users’ cursors, and menu state transition</p>
+
+<h3>Difficulties we encountered</h3>
+<p>Manipulation and Navigation. When changing from using the Navigation event for tracking hand movement to Manipulation event, we encountered errors regarding “Access Violation” that caused the Application to crash every 2 minutes or so. We posted on the Microsoft <a href="https://forums.hololens.com/discussion/713/manipulation-gesture-causes-crash" > Hololens forums</a> and were able to get a fast reply. Luckily, a new update for Unity released on 5/5 fixed this error which was a big relief for us. We will continue running the application with the Manipulation event enabled for the gesture recognizer in order to prevent any unforeseen issues during the final demo. </p>
+
+<p>When painting holograms, we noticed that many holograms incorporate a lot of different parts and meshes. However, our painting module is locked to a single mesh and will not interact with other meshes. For example, there was a race car module with body and wheels parts, with the body and wheels having separate meshes. When attempting to paint, the painting module will only apply color to the body mesh but not to the wheel mesh. A solution that we came up with is to basically combine all the parts together then apply a single mesh to the entire part. This works since we only need to allow painting on what the user can see, and the user will only able to see the car’s surface, allowing the ability to just use a single mesh for the entire hologram. We have currently found an application on the Unity store that allows combining parts and meshes and will likely use it to create different holograms for our application.</p>
+
+<h3>Plan for next week</h3>
+<p>Our plan for next week is to do the following things:
+<ul>
+<li>Create a sufficient amount of paintable holograms for our application</li>
+<li>Have a stylish menu which follows the paintable hologram</li>
+<li>Make sure that Manipulation Event for gesture recognizer works smoothly & fine tune parameters</li>
+<li>Able to clear all drawn items and reflect that across all instances of a hologram</li>
+<li>Share existing paint to new users joining an existing session</li>
+</ul>
+</p>
+
+<h3>Visual Progress</h3>
+Most of our work is already reflected in the video for our demo below
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/oURCx2-zDKQ" frameborder="0" allowfullscreen></iframe>
+
+
+
+                
+					
+					
+				</div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                        <!-- <li>
+                            <a href="#">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li> -->
+                        <!-- <li>
+                            <a href="#">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li> -->
+                    </ul>
+                    <p class="copyright text-muted">Copyright &copy; Team3 2016</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="js/clean-blog.min.js"></script>
+
+</body>
+
+</html>

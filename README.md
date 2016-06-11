@@ -1,18 +1,26 @@
-Steps to run:
+# [Start Bootstrap](http://startbootstrap.com/) - [Clean Blog](http://startbootstrap.com/template-overviews/clean-blog/)
 
-Open Unity scene named "final"
+[Clean Blog](http://startbootstrap.com/template-overviews/clean-blog/) is a stylish, responsive blog theme for [Bootstrap](http://getbootstrap.com/) created by [Start Bootstrap](http://startbootstrap.com/). This theme features a blog homepage, about page, contact page, and an example post page along with a working PHP contact form.
 
-Input computer ip address in sharing prefab
+## Getting Started
 
-Run sharing service
+To use this theme, choose one of the following options to get started:
+* Download the latest release on Start Bootstrap
+* Fork this repository on GitHub
 
-Deploy to hololens
+## Bugs and Issues
 
+Have a bug or an issue with this theme? [Open a new issue](https://github.com/IronSummitMedia/startbootstrap-clean-blog/issues) here on GitHub or leave a comment on the [template overview page at Start Bootstrap](http://startbootstrap.com/template-overviews/clean-blog/).
 
-If need to add new holograms, add a mesh collider, P3D_Paintable.cs and TexturePainter.cs to the model. In P3D_Paintable, make sure to check Duplicate on Awake and Create on Awake for the texture.
+## Creator
 
-Also add PreInstantiateHologram.cs and add a unique number to identify the model for sharing in Reserved UID field in the script.
+Start Bootstrap was created by and is maintained by **David Miller**, Managing Parter at [Iron Summit Media Strategies](http://www.ironsummitmedia.com/).
 
-If you would like to rotate and move the hologram add HologramPlacement and HologramRotation.cs.
+* https://twitter.com/davidmillerskt
+* https://github.com/davidtmiller
 
-Once the new hologram has the scripts that you want, drag it to become a child of the DefaultModels gameobject.
+Start Bootstrap is based on the [Bootstrap](http://getbootstrap.com/) framework created by [Mark Otto](https://twitter.com/mdo) and [Jacob Thorton](https://twitter.com/fat).
+
+## Copyright and License
+
+Copyright 2013-2015 Iron Summit Media Strategies, LLC. Code released under the [Apache 2.0](https://github.com/IronSummitMedia/startbootstrap-clean-blog/blob/gh-pages/LICENSE) license.

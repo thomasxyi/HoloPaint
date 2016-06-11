@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Week 10</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/clean-blog.min.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">Holo Paint</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="index.html">Home</a>
+                    </li>
+                    <li>
+                        <a href="about.html">About</a>
+                    </li>
+                    <!-- <li>
+                        <a href="post.html">Sample Post</a>
+                    </li> -->
+                    <li>
+                        <a href="contact.html">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Header -->
+    <!-- Set your background image for this header on the line below. -->
+    <header class="intro-header" style="background-image: url('img/week5.png')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>Week 10 Update</h1>
+                        <!-- <h2 class="subheading">Problems look mighty small from 150 miles up</h2> -->
+                        <span class="meta">June 2, 2016</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Post Content -->
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+
+     <h3>Intro</h3>
+<p>This week, we wrapped up our application by smoothing out some rough edges in the application and creating a simple scene for the demo.</p>
+
+<h3>Progress</h3>
+<p>
+One thing that we did was to finish up the advanced menu. The current menu is fairly simple and has everything in 1 box layout. The advanced menu enables the user to hide and show the menu and categorizes buttons such that when a user clicks a button, other buttons will appear/disappear. This allows the menu to be less cluttered and not distract the user when using the menu.</p>
+
+<p>
+The model scene for the demo consists of a wall, 8 trees and a house as you can see below in the demo images. Users start with trees on both side, the wall towards the back of the user ,and the house in front of the user. We plan on adding more models to the scene though currently we have been encountering a lot of difficulties in this area.
+</p>
+
+<p>Currently, our work is split up as such.</p>
+
+<p>Radu is working on hooking up the advanced menu to various functionalities.</p>
+
+<p>Panji, Andy, and Thomas are working on creating a better demo scene for the final demo</p>
+
+<h3>Difficulties we encountered</h3>
+<p>The major issue of the week is due to the UV mapping of various models that we had bought from the Unity Asset Store. In order to save space, most models utilize the same UV map for portions of the mesh. For example, a house uses the same UV map for all of its windows. Since our painting module uses a raycast to detect the UV coordinates and then changes the color at the detected UV coordinates, painting at a certain spot sometimes causes multiple paint dots to appear. The solution to this was to manually create new UV maps for each model. While this works, the amount of time consumed per model is still an issue, since we would like to have a large variety of models.</p>
+
+<p>Another issue related to the scene creation is that the models that we create with the new UV map have different sizes when imported to unity. This meant that we would need to scale each model accordingly. However, this affects the brush size and causes paint dots to be of different size on different models (larger paint dot on models that were scaled up more). To resolve this, we will likely do some sort of guess and check for the model size when creating the models in order to minimize the difference in paint dots between models.</p>
+
+<h3>Progress Pictures</h3>
+<p>Drawing faces and writing on the wall</p>
+<img src="img/week7_demo/file.jpg" style="width:704px;height:396px;">
+<p>Coloring a tree</p>
+<img src="img/week7_demo/file2.jpg" style="width:704px;height:396px;">
+
+
+<h3>List for final demo</h3>
+<p>Changes for next week
+<ul>
+<li>Create a final scene for the demo that fits within the demo space</li>
+<li>Disable spatial mapping to prevent bystanders from blocking paintable objects</li>
+<li>Better menu, display which mode people are in</li>
+</ul>
+</p>
+
+
+
+
+                
+					
+					
+				</div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                        <!-- <li>
+                            <a href="#">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li> -->
+                        <!-- <li>
+                            <a href="#">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li> -->
+                    </ul>
+                    <p class="copyright text-muted">Copyright &copy; Team3 2016</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="js/clean-blog.min.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Week 9</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/clean-blog.min.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">Holo Paint</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="index.html">Home</a>
+                    </li>
+                    <li>
+                        <a href="about.html">About</a>
+                    </li>
+                    <!-- <li>
+                        <a href="post.html">Sample Post</a>
+                    </li> -->
+                    <li>
+                        <a href="contact.html">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Header -->
+    <!-- Set your background image for this header on the line below. -->
+    <header class="intro-header" style="background-image: url('img/week4.png')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>Week 9 Update</h1>
+                        <!-- <h2 class="subheading">Problems look mighty small from 150 miles up</h2> -->
+                        <span class="meta">May 26, 2016</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Post Content -->
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+
+     <h3>Intro</h3>
+<p>For the past 2 weeks, we have been working on integrating and improving the more advanced painting module into our application. Additionally, the menu and manipulation gestures were also tested and fine tuned.</p>
+
+<h3>Progress</h3>
+<p>
+Previously, the original painting module was inflexible as it was originally designed for just painting on a whiteboard. Now, with the more complex painting module, we are now able to paint on multiple holograms with multiple people. While most of the original functionality was ported over, we are still working on some remaining parts such as syncing brush cursors, changing the brush colors, and changing the scale and shape of the brush. The workload for these seem to be fairly minimal as it mainly involves changing a few lines or so in the various button scripts.
+</p>
+
+<p>
+We were also able to make the manipulation drawing much more smoother. One thing that we did was to test and fine tune the parameters for the manipulation position that was given when a manipulation event is updated. Currently the change in position is multiplied by two in order to allow the user to draw more freely in the limited detection space that the Hololens device supports. Another thing that we did was to add a stepping function to the painting when doing the manipulation gesture in order to make the painting look smoother. Currently, if a user starts painting at point A and ends at point B, we use the Vector2.Lerp() function and move along the UV mapping in order to paint everything in between A and B.
+</p>
+
+<p>The hologram position and rotation can also be manipulated through hand gestures, an upgrade from the original always facing user state that was originally designed for the whiteboard.</p>
+
+<p>In terms of the menu, we currently plan on having a button on screen that makes the menu pop up in front of the user. However, we are currently having trouble with the custom animations to show up and will continue to work on that. In the event that we are unable to do so, we plan on just having the buttons all laid out on a board and will appear/disappear when the menu button is clicked.</p>
+
+<p>Currently, our work is split up as such.</p>
+
+<p>Radu is working on a better UI buttons, sound and animations for the menu</p>
+
+<p>Panji is working on adding functionality for deleting holograms as well as clearing paint from holograms.</p>
+
+<p>Andy is working on displaying other users’ cursors in the application.</p>
+
+<p>Thomas is working on connecting the brush buttons to the painting module.</p>
+
+<h3>Difficulties we encountered</h3>
+<p>Filling in the paint between two points and painting in general was harder than expected when switching to the new module. This is due to the fact that the holograms are of varying depth and our original application was planned for a whiteboard of constant depth. As a result, a lot of our original code for painting did not work right off the bat since the paint coordinate would sometimes have inaccurate painting coordinates due to varying depth (paint inside the model or paint far away from desired location). To resolve this, we used Raycasting from the camera to the desired paint coordinate at every paint operation in order to get the correct depth. This allowed us to correctly place paint on the hologram. However, this has introduced another issue. Since we are raycasting from the user’s camera, whenever we move in the world, the brush will move along with it if we are currently using the manipulation gesture. A proposed solution to this would be to use the brush cursor position as origin for raycasting instead of the camera. We will test this soon, though we think that it might not be too big of an issue as a person is not likely to move and paint at the same time.</p>
+
+<h3>Demo Scene Details</h3>
+<p>For the demo scene, we have decided to make an urban city environment with an asset pack that we found on the unity asset store. It contains things like skyscrapers, stadiums, nature items, etc. and we will pre load these holograms upon startup. Users will be allowed to draw on any part of the environment and there will also likely be some sort of graffiti wall that users can draw on and persist across all sessions. </p>
+
+<h3>Plan for next week</h3>
+<p>Our plan for next week is to do the following things:
+<ul>
+<li>Create a scene for the demo</li>
+<li>Have a stylish menu which pops up</li>
+<li>Able to clear all drawn items and reflect that across all instances of a hologram</li>
+<li>Have all the existing functionality hooked up to the new painting module</li>
+</ul>
+</p>
+
+
+
+
+                
+					
+					
+				</div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                        <!-- <li>
+                            <a href="#">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li> -->
+                        <!-- <li>
+                            <a href="#">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li> -->
+                    </ul>
+                    <p class="copyright text-muted">Copyright &copy; Team3 2016</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="js/clean-blog.min.js"></script>
+
+</body>
+
+</html>

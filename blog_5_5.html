@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Week 6</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/clean-blog.min.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">Holo Paint</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="index.html">Home</a>
+                    </li>
+                    <li>
+                        <a href="about.html">About</a>
+                    </li>
+                    <!-- <li>
+                        <a href="post.html">Sample Post</a>
+                    </li> -->
+                    <li>
+                        <a href="contact.html">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Header -->
+    <!-- Set your background image for this header on the line below. -->
+    <header class="intro-header" style="background-image: url('img/week6.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>Week 6 Update</h1>
+                        <!-- <h2 class="subheading">Problems look mighty small from 150 miles up</h2> -->
+                        <span class="meta">May 5, 2016</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Post Content -->
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+
+                    <h2 class="section-heading">Intro</h2>
+<p>This week, we were able to complete the networking portion of the application as well as gesture recognition for drawing. Most of it is still pretty rough on the edges but we hope to fine tune these features for the remainder of the week before Tuesday’s demo.</p>
+
+<h2 class="section-heading">Progress</h2>
+<p>Networking mode currently synchronizes all the paint drawn on all instances of one board with fairly minimal lag (supports multiple colors). We were surprised as to how well it worked after we tried it out as one user’s paint would show up on the other user’s device with maybe 100ms of latency. Gesture recognition now supports gesture recognition for pinch and drag. Users can now draw continuously on the board though currently it only consists of disconnected dots so when the user moves too quickly a dotted line will appear. This will likely be improved by increasing the refresh rate of painting when pinching and dragging occurs.</p>
+
+<p>For the UI portions, our application now supports twice as many colors and the application will give feedback to the user once a color is selected.</p>
+
+<p>Currently, our work is split up as such.</p>
+
+<p>Thomas and Andy are working on improving the hand gesture detection and painting capabilities associated with it.</p>
+
+<p>Panji is working on improving the networking module, allowing sharing of the whiteboard background and creating a better foundation for managing multiple whiteboards.</p>
+
+<p>Radu is working on adding more UI elements as well as splitting the current painting layers into 3 separate layers (background, transparent drawing layer, sprite layer) for better management of shared painting.</p>
+
+<h2 class="section-heading">Progress Pictures</h2>
+<p>Drawing things with hand gesture</p>
+                    <img src="img/week6_demo/1.jpg" style="width:704px;height:396px;">
+                    <p></p>
+                    <img src="img/week6_demo/2.jpg" style="width:704px;height:396px;">
+
+<h2 class="section-heading">Difficulties we encountered</h2>
+<p>One thing that we encountered was how the navigation event (pinch and drag) will cancel if the user moves the gaze off focus of the object. The weird thing that occurs is if the user pinches and drags at the bottom of the object and the hand follows the gaze up to the top, the navigation event is still updating. However, once the user lifts the head up a bit off focus of the object (with hand still pinched and in view), the navigation event is cancelled. This seems to affect usability of the application a bit as the user must now restrict head movement to prevent the gaze focus from moving off the object. We have posted on the Microsoft Hololens forums to learn more about the Navigation event and find a solution to this problem.</p>
+<p>Another difficulty we encountered was in the networking part because of the lack of documentation for the Holotoolkit and the techniques we learned from Holograms 240 was too specific to be used generally. As such we have not figured out the single hologram whiteboard sharing and though we have implemented the sharing of the painting, there could be future problem with making it more general.</p>
+
+<h2 class="section-heading">Plan for next week</h2>
+<p>Next week we plan to prepare for the Tuesday Demo for the first 2 days and then focus on more advanced UI elements such as multiple whiteboards, a more elegant menu, and other painting functionalities. However, we will likely focus on whiteboard features and then move onto painting features once whiteboard features have been mostly completed.</p>
+
+
+                
+					
+					
+				</div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                        <!-- <li>
+                            <a href="#">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li> -->
+                        <!-- <li>
+                            <a href="#">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li> -->
+                    </ul>
+                    <p class="copyright text-muted">Copyright &copy; Team3 2016</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="js/clean-blog.min.js"></script>
+
+</body>
+
+</html>

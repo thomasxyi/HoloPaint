@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Product Document</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/clean-blog.min.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">Holo Paint</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li type="square" >
+                        <a href="index.html">Home</a>
+                    </li>
+                    <li type="square" >
+                        <a href="about.html">About</a>
+                    </li>
+                    <!-- <li type="square" >
+                        <a href="post.html">Sample Post</a>
+                    </li> -->
+                    <li type="square" >
+                        <a href="contact.html">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Header -->
+    <!-- Set your background image for this header on the line below. -->
+    <header class="intro-header" style="background-image: url('img/prd.png')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>Product Requirements Document - Revised</h1>
+                        <!-- <h2 class="subheading">Problems look mighty small from 150 miles up</h2> -->
+                        <span class="meta">May 17, 2016</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Post Content -->
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <h2 class="section-heading">Summary</h2>
+
+                    <p>The purpose of HoloPaint is to give users an interactive painting experience, allowing them to collaborate and share ideas using the Microsoft Hololens. We want to allow users to be able to have a real time collaborative experience, where multiple users can interact with a paintable hologram in order to collectively work together without the need of a huge space, having to crowd around a single writing surface, or taking the time to meet in person. We want this application to be relatively simple for the casual user, so that any individual would be able to pick up a Hololens and begin contributing ideas. This will be implemented as a Hololens Shared Experience and many users will be able to see and work immersively with each other.</p>
+                    <p>With many diverse applications such as drafting ideas in meetings, adding life and color to a virtual hologram, and creatively painting together with friends, HoloPaint allows Hololens users to enhance their AR experience and also fully immerse themselves in a creative environment.</p>
+
+                    <h2 class="section-heading">Deliverables</h2>
+
+                    <p>Our project is a collaborative painting application on the Hololens device. This application will have a shareable workspace (e.g. a customizable hologram) for multiple users to draw and paint on using hand movements. Each user will have access to their own set of drawing tools (brush, eraser, etc) in order to paint and will be allowed to move the hologram in real space without physical limitations. Additionally, the workspace is shared for all users across each session and users can use it to collaborate and work together in real time. Once users are done with the sketching, they can save their creations for further refinement in the future or showcasing their work to peers.</p>
+
+                    <h2 class="section-heading">Critical Features</h2>
+
+                    <ol>
+                        <li type="square">Drawing on a virtual hologram with hand movement and gestures</li>
+                        <li type="square">Options for drawing (color and width of cursor)</li>
+                        <li type="square">Options for holograms (multiple holograms, placement)</li>
+                        <li type="square">Simultaneously editable by multiple Hololens users</li>
+                    </ol>
+
+                    <h2 class="section-heading">Performance Metrics</h2>
+
+                    <ol>
+                        <li type="square">Usability of the application.
+                        We want our application to be usable without any tutorials, similar to Paint.</li>
+                        <li type="square">Accuracy of synchronization between multiple Hololens devices.
+                        Anything one user creates should be identical for the other users and any conflicts must be handled gracefully.
+                        </li>
+                        <li type="square">Precision of painting.
+                        What the user creates on our application must be what the users actually did and expect
+                        </li>
+                        <li type="square">Performance of the application.
+                        We are aiming for the application to be able to run at a refresh rate of 60 Hz or more.
+                        </li>
+                    </ol>
+
+                    <h2 class="section-heading">Milestones</h2>
+                    
+                    <b>Weeks 4 - 6 Basic Elements of the applications</b>
+                    <ol>
+                        <li type="square">Be able to track user’s hand gestures and have a cursor follow the focus point</li>
+                        <li type="square">Display a basic hologram in space
+                        </li>
+                        <li type="square">Allow user to draw on hologram using simple hand gestures
+                        </li>
+                        <li type="square">Change hologram position and orientation within space using gaze and hand movement
+                        </li>
+                    </ol>
+
+                    <b>Weeks 4 - 7 Server and Networking implementation</b>
+                    <br />
+                    <em>* Start when basic elements are mostly finished</em>
+                    <ol>
+                        <li type="square">Establish what data to transfer between multiple instances of application
+                        </li>
+                        <li type="square">Setup server for communication between Hololens devices (decide between lab machine server or AWS server)</li>
+                        <li type="square">  Implement collaborative painting on hologram (changes made to hologram appear on all other instances of the hologram)</li>
+                    </ol>
+
+
+                    <b>Weeks 7 - 9 Advanced UI Elements</b>
+                    <br />
+                    <ol>
+                        <li type="square">Advanced menu for selection of holograms and other painting related functionalities
+                        </li>
+
+                        <li type="square">Change color and size of painting tool
+                        </li>
+
+                        <li type="square">Eraser/Clear all for deleting drawn items
+                        </li>
+                        
+                        <li type="square">Advanced brush cursor (show color and size of current brush)
+                        </li>
+
+                    </ol>
+                    
+
+                    <b>Weeks 9 - 10 Debugging, Finishing touches, Preparation for Final Demo</b>
+
+                    <ol>
+                        <li type="square">Debug application</li>
+                        <li type="square"> Polish features and user experience
+                        </li>
+                        <li type="square">Planning for video and demo</li>
+
+                    </ol>
+
+                    <h2 class="section-heading">Responsibilities</h2>
+<ul>
+<li type="square" >
+Borui Andy Li &nbsp  Painting and UI design
+</li>
+<li type="square" >
+Panji Wisesa  &nbsp &nbsp  Networking and Painting
+</li>
+<li type="square" >
+Radu Cracut &nbsp &nbsp  Painting and UI design
+</li>
+<li type="square" >
+Thomas Yi &nbsp &nbsp &nbsp &nbspNetworking and Painting
+</li>
+</ul>
+<h2 class="section-heading">Materials and outside help needed</h2>
+We need access to a server to facilitate communication between Hololens devices. And we also may need assistance with networking portion of the application, though this should be resolvable through participating in the Hololens App Development Forum.
+<h2 class="section-heading">Budget </h2>
+<ol>
+<li type="square" >UI Assets               $250</li>
+<li type="square" >UI Sounds               $150</li>
+<li type="square" >Background Music            $50</li>
+<li type="square" >Unity Store Assets    $300</li>
+</ol>
+
+<h2 class="section-heading">Risks and how risks will be addressed</h2>
+<ol>
+
+<li type="square" >Latency between devices might negatively affect user experience. </li>
+Optimize network code, use local machine as server as backup if connection over third party server is too unresponsive for normal use.</li>
+</ol>
+
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                        <!-- <li type="square" >
+                            <a href="#">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li type="square" >
+                            <a href="#">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li> -->
+                        <!-- <li type="square" >
+                            <a href="#">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li> -->
+                    </ul>
+                    <p class="copyright text-muted">Copyright &copy; Team3 2016</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="js/clean-blog.min.js"></script>
+
+</body>
+
+</html>

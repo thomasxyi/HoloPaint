@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Initial Post</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/clean-blog.min.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">Holo Paint</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="index.html">Home</a>
+                    </li>
+                    <li>
+                        <a href="about.html">About</a>
+                    </li>
+                    <!-- <li>
+                        <a href="post.html">Sample Post</a>
+                    </li> -->
+                    <li>
+                        <a href="contact.html">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Header -->
+    <!-- Set your background image for this header on the line below. -->
+    <header class="intro-header" style="background-image: url('img/proposal.png')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>Initial Proposal</h1>
+                        <!-- <h2 class="subheading">Problems look mighty small from 150 miles up</h2> -->
+                        <span class="meta">April 7, 2016</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Post Content -->
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+                    <h2 class="section-heading">Problem Space and Applications</h2>
+
+                    <p>Whiteboard sketching is often a very useful tool in group discussions, especially when attempting to materialize and share an idea. However, despite all the features and applications that the Hololens provides, there is not yet a way to allow such group collaboration in real time. While Skype provides such an interface for drawing up designs, it is inflexible and information is delivered asynchronously.</p>
+
+                    <p>As a result, we suggest to resolve this issue by building an application in which multiple users can draw on a holographic whiteboard that is updated in real time. Additionally, by augmenting this idea with many other features allowable by Hololens such as being able to manipulate the whiteboard’s position, size, and orientation in actual space, users using this application are able to communicate much more efficiently and maximize productivity in a group setting.</p>
+
+                    <h2 class="section-heading">Use Cases</h2>
+
+                    <p>During design meetings between remote teams, team members can utilize the application to sketch out detailed designs and discuss ideas in real time. Compared to the traditional message sending which requires the member to finish the design before sending, or sending an incomplete design, the real time sharing of progress through the painting application allows better collaboration through instant communication and progress sharing.</p>
+
+                    <p>Classic games can also be engaged through this application. Games like Tic-Tac-Toe, hangman, and pictionary are readily available for entertainment and users sharing the same whiteboard can start a game whenever they want to by manipulating the holographic whiteboard’s orientation and using the drawing tool.</p>
+
+    
+
+                    <h2 class="section-heading">Related Technology</h2>
+
+                    <p>As there’s really nothing similar to Hololens we took some inspiration from it’s cousin the VR headsets. We were especially inspired by Tilt Brush and how it lets the user use the motion controls to channel their creativity. But unlike VR, AR can easily be a social experience so we want to fully utilize the Hololens, like Tilt Brush did, by using its ability to work with other Hololenses on the same hologram.</p>
+
+                    <p>e also have used Windows for years and are familiar with the humble MS Paint, and we feel that the Hololens running Windows 10 should have its own Paint.</p>
+
+                    <p>Lastly, we were pointed towards HoloStudio as a creation tool on the Hololens to learn from but it seems to be more focused on the assembly of prebuilt parts and we want to focus more on the user’s creation, so we feel that HoloStudio is very separate to our efforts. Their UI design, however, is something that we are definitely learning from as they have created a nice 3D UI for a creation tool.</p>
+
+                    <h2 class="section-heading">Potential Solutions</h2>
+
+                    <p>To address this problem, we propose to build a collaborative whiteboard drawing application for hololens. The application will have a shareable workspace(e.g. A canvas hologram) for multiple users to draw and sketch. Like many other current Hololens applications, the user will create their drawings in this workspace. While we planned on this workspace to support 3 dimensional object creation, it will likely just be a 2D canvas. This is because the depth perception on the hololens is not precise enough for the hololens to detect 3D movement.</p>
+
+                    <p>
+                    The real time sharing feature of the canvas will be done across a bluetooth or wifi connection. Users will be able to manipulate and draw on the canvas as they see fit and it will be reflected across all instances of the hologram in the group session.</p>
+
+                    <h2 class="section-heading">Budget Estimation</h2>
+
+                    <p>We project that we only need assets that are UI related such as:
+                    </p>
+
+                    <ol>
+                        <li type="square">Panels</li>
+                        <li type="square">Icons</li>
+                        <li type="square">Sound effects</li>
+
+                    </ol>
+
+                    <p>As we also take inspiration from HoloStudio we believe that most of this need can even be fulfilled by reusing HoloStudio if we are allowed to do so. Any extra assets we can get would be for the user to incorporate in their creation.
+                    </p>
+
+                    <h2 class="section-heading">Feedback from presentation</h2>
+
+                    <p>During the presentation, we received many helpful tips in order to improve our application and pivot the original idea to something more viable and interesting:</p>
+
+                    <ol>
+                        <li type="square">Instead of a 3d drawing application, it was suggested that we instead have a collaborative drawing application in 2d or 3d depending on the precision of Hololens’ hand tracking along the z-axis.</li>
+                        <li type="square">With many features being considered, it was recommended that we emphasize quality over quantity. We should pick one experience and nail it instead of implementing many features and not having a polished experience for the user.</li>
+                        <li type="square">For platform sharing, we should pay attention to the mixed reality captures (MRC) feature that the Hololens’ camera provides.</li>
+                        <li type="square">For the user experience, a feature that we should add is to have some event occur when the user’s hand is outside of the drawable area, which should also be indicated by some sort of reference picture.</li>
+
+                    </ol>
+
+                    <h3><a href="https://docs.google.com/presentation/d/1VGY-tj4Xs6iTk2IQpyfl9GVVv--CCQnNrYOUMMGo6S4/edit#slide=id.p">Slide deck used during presentation</a> </h3>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                        <!-- <li>
+                            <a href="#">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li> -->
+                        <!-- <li>
+                            <a href="#">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li> -->
+                    </ul>
+                    <p class="copyright text-muted">Copyright &copy; Team3 2016</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="js/clean-blog.min.js"></script>
+
+</body>
+
+</html>
